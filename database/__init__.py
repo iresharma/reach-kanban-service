@@ -1,77 +1,64 @@
-from pony.orm import *
-import pb.kanban_pb2 as models
-from enum import Enum
-from uuid import uuid4
-
-db = Database()
-db.bind(provider='postgres', user='iresharma', password='DjP5OMamofu9',
-        host='ep-yellow-hill-73697354.ap-southeast-1.aws.neon.tech', database='neondb')
-
-
-class UserAccount(db.Entity):
-    id = Required(str)
-    account_name = Required(str)
-    email = Required(str)
-    created_at = Required(int)
-    photo_url = Required(str)
-    users = Set(str)
-    owner = Required(str)
-    pageId = Required(str)
-    bucketId = Required(str)
-    boardId = Required(str)
-
-    def to_proto(self):
-        return models.UserAccount(
-            id=self.id,
-            account_name=self.account_name,
-            email=self.email,
-            created_at=self.created_at,
-            photo_url=self.photo_url,
-            users=self.users,
-            owner=self.owner,
-            pageId=self.pageId,
-            bucketId=self.bucketId,
-            boardId=self.boardId
-        )
-
-
-class Board(db.Entity):
-    id = Required(str)
-    items = Set('Item')
-    user_account = Required(UserAccount)
-
-
-class Item(db.Entity):
-    id = Required(str)
-    title = Required(str)
-    desc = Required(str)
-    priority = Enum('Priority', ['LOW', 'MED', 'HIGH'])
-    script = str
-    reference = str
-    storage = str
-    prefix = str
-    board = Required(Board)
-
-    def to_proto(self):
-        return models.Item(
-            self.id,
-            self.title,
-            self.desc,
-            self.priority.value,
-            self.script,
-            self.reference,
-            self.storage,
-            self.board.id
-        )
-
-
-@db_session
-def initKanban(userAccountId: str):
-    board = Board(
-        id=str(uuid4()),
-        items=[],
-        user_account=userAccountId
-    )
-    user_account = UserAccount.get(id=userAccountId)
-    user_account.get_for_update()
-
+# import uuid
+#
+# from pony.orm import *
+# from os import environ
+#
+# db = Database()
+# db.bind(provider='postgres', user=environ['DB_USER'], password=environ['DB_PASSWORD'], host=environ['DB_HOST'],
+#         database=environ['DB_NAME'], sslmode="require", sslrootcert="../root.crt")
+#
+#
+# class Board(db.Entity):
+#     id = Required(str)
+#     labels = Set("Label")
+#     items = Set("Item")
+#
+#
+# class UserAccount(db.Entity):
+#     id = Required(str)
+#     account_name = Required(str)
+#     email = Required(str)
+#     photo_url = str
+#     users = Required(StrArray)
+#     owner = Required(str)
+#     pageId = str
+#     bucketId = str
+#     boardId = Optional(Board)
+#
+#
+# class KanbanLabel(db.Entity):
+#     id = Required(str)
+#     name = Required(str)
+#     color = Required(str)
+#     boardId = Required(Board)
+#
+#
+# class Comment(db.Entity):
+#     id = Required(str)
+#     userId = Required(str)
+#     message = Required(str)
+#
+#
+# class Item(db.Entity):
+#     id = Required(str)
+#     label = Required(KanbanLabel)
+#     status = Required(str)
+#     title = Required(str)
+#     desc = str
+#     links = Optional(dict)
+#     comment = Set(Comment)
+#     board = Board
+#
+#
+# db.generate_mapping(create_tables=False)
+# db.create_tables(KanbanLabel, Comment, Item)
+#
+#
+# def InitKanban(user_account: str) -> Board:
+#     board = Board(
+#         id=str(uuid.uuid4()),
+#         labels=[],
+#         items=[]
+#     )
+#     commit()
+#     return board

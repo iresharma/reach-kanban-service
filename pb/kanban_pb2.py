@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ckanban.proto\x12\x0ekanban_package\x1a\x1fgoogle/protobuf/timestamp.proto\",\n\x13\x43reateKanbanRequest\x12\x15\n\rUserAccountId\x18\x01 \x01(\t\"\xd2\x01\n\x0bUserAccount\x12\n\n\x02id\x18\x01 \x01(\t\x12\x14\n\x0c\x61\x63\x63ount_name\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12.\n\ncreated_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x11\n\tphoto_url\x18\x05 \x01(\t\x12\r\n\x05users\x18\x06 \x03(\t\x12\r\n\x05owner\x18\x07 \x01(\t\x12\x0e\n\x06pageId\x18\x08 \x01(\t\x12\x10\n\x08\x62ucketId\x18\t \x01(\t\x12\x0f\n\x07\x62oardId\x18\n \x01(\t\"\x1e\n\x10GetKanbanRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\x94\x02\n\x04Item\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05title\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12/\n\x08priority\x18\x04 \x01(\x0e\x32\x1d.kanban_package.Item.PRIORITY\x12\x0e\n\x06script\x18\x05 \x01(\t\x12\x11\n\treference\x18\x06 \x01(\t\x12\x0f\n\x07storage\x18\x07 \x01(\t\x12\x0e\n\x06status\x18\x08 \x01(\t\x12.\n\ncreated_at\x18\t \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0f\n\x07\x62oardId\x18\n \x01(\t\"&\n\x08PRIORITY\x12\x07\n\x03LOW\x10\x00\x12\x07\n\x03MED\x10\x01\x12\x08\n\x04HIGH\x10\x02\"X\n\x0eKanbanResponse\x12\n\n\x02id\x18\x01 \x01(\t\x12#\n\x05items\x18\x02 \x03(\x0b\x32\x14.kanban_package.Item\x12\x15\n\ruserAccountId\x18\x03 \x01(\t\"1\n\x13UpdateStatusRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06status\x18\x02 \x01(\t2\xf0\x02\n\rKanbanPackage\x12T\n\x10InitializeKanban\x12#.kanban_package.CreateKanbanRequest\x1a\x1b.kanban_package.UserAccount\x12M\n\tGetKanban\x12 .kanban_package.GetKanbanRequest\x1a\x1e.kanban_package.KanbanResponse\x12\x35\n\x07\x41\x64\x64Item\x12\x14.kanban_package.Item\x1a\x14.kanban_package.Item\x12I\n\x0cUpdateStatus\x12#.kanban_package.UpdateStatusRequest\x1a\x14.kanban_package.Item\x12\x38\n\nUpdateItem\x12\x14.kanban_package.Item\x1a\x14.kanban_package.ItemB\tZ\x07./protob\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0ckanban.proto\x12\x0ekanban_package\x1a\x1fgoogle/protobuf/timestamp.proto\"\x85\x02\n\x0bUserAccount\x12\n\n\x02id\x18\x01 \x01(\t\x12\x14\n\x0c\x61\x63\x63ount_name\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12.\n\ncreated_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x11\n\tphoto_url\x18\x05 \x01(\t\x12\r\n\x05users\x18\x06 \x03(\t\x12\r\n\x05owner\x18\x07 \x01(\t\x12\x13\n\x06pageId\x18\x08 \x01(\tH\x00\x88\x01\x01\x12\x15\n\x08\x62ucketId\x18\t \x01(\tH\x01\x88\x01\x01\x12\x14\n\x07\x62oardId\x18\n \x01(\tH\x02\x88\x01\x01\x42\t\n\x07_pageIdB\x0b\n\t_bucketIdB\n\n\x08_boardId\"A\n\x05Label\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\r\n\x05\x63olor\x18\x03 \x01(\t\x12\x0f\n\x07\x62oardId\x18\x04 \x01(\t\"6\n\x07\x43omment\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0e\n\x06userId\x18\x02 \x01(\t\x12\x0f\n\x07message\x18\x03 \x01(\t\"\x86\x02\n\x04Item\x12\n\n\x02id\x18\x01 \x01(\t\x12$\n\x05label\x18\x02 \x01(\x0b\x32\x15.kanban_package.Label\x12&\n\x06status\x18\x03 \x01(\x0e\x32\x16.kanban_package.STATUS\x12\r\n\x05title\x18\x04 \x01(\t\x12\x0c\n\x04\x64\x65sc\x18\x05 \x01(\t\x12.\n\x05links\x18\x06 \x03(\x0b\x32\x1f.kanban_package.Item.LinksEntry\x12)\n\x08\x63omments\x18\x07 \x03(\x0b\x32\x17.kanban_package.Comment\x1a,\n\nLinksEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"_\n\x05\x42oard\x12\n\n\x02id\x18\x01 \x01(\t\x12#\n\x05items\x18\x02 \x03(\x0b\x32\x14.kanban_package.Item\x12%\n\x06labels\x18\x03 \x03(\x0b\x32\x15.kanban_package.Label\",\n\x13\x43reateKanbanRequest\x12\x15\n\rUserAccountId\x18\x01 \x01(\t\"<\n\x0cLabelRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05\x63olor\x18\x02 \x01(\t\x12\x0f\n\x07\x62oardId\x18\x03 \x01(\t\"\xe9\x01\n\x0e\x41\x64\x64ItemRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05label\x18\x02 \x01(\t\x12&\n\x06status\x18\x03 \x01(\x0e\x32\x16.kanban_package.STATUS\x12\r\n\x05title\x18\x04 \x01(\t\x12\x0c\n\x04\x64\x65sc\x18\x05 \x01(\t\x12\x38\n\x05links\x18\x06 \x03(\x0b\x32).kanban_package.AddItemRequest.LinksEntry\x12\x0f\n\x07\x62oardId\x18\x07 \x01(\t\x1a,\n\nLinksEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x1b\n\rBoardResponse\x12\n\n\x02id\x18\x01 \x01(\t\"-\n\x0eGetItemRequest\x12\x0c\n\x04page\x18\x01 \x01(\r\x12\r\n\x05limit\x18\x02 \x01(\r\"D\n\x0fGetItemResponse\x12#\n\x05items\x18\x01 \x03(\x0b\x32\x14.kanban_package.Item\x12\x0c\n\x04page\x18\x02 \x01(\r\"&\n\x0e\x45xportResponse\x12\x14\n\x0c\x64ownloadLink\x18\x01 \x01(\t\"\x9a\x02\n\x11UpdateItemRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\x05label\x18\x02 \x01(\tH\x00\x88\x01\x01\x12+\n\x06status\x18\x03 \x01(\x0e\x32\x16.kanban_package.STATUSH\x01\x88\x01\x01\x12\x12\n\x05title\x18\x04 \x01(\tH\x02\x88\x01\x01\x12\x11\n\x04\x64\x65sc\x18\x05 \x01(\tH\x03\x88\x01\x01\x12;\n\x05links\x18\x06 \x03(\x0b\x32,.kanban_package.UpdateItemRequest.LinksEntry\x1a,\n\nLinksEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x42\x08\n\x06_labelB\t\n\x07_statusB\x08\n\x06_titleB\x07\n\x05_desc*J\n\x06STATUS\x12\x08\n\x04TODO\x10\x00\x12\x0c\n\x08PROGRESS\x10\x01\x12\r\n\tCOMPLETED\x10\x02\x12\x0c\n\x08\x43\x41NCELED\x10\x03\x12\x0b\n\x07\x42\x41\x43KLOG\x10\x04\x32\xcb\x03\n\rKanbanPackage\x12V\n\x10InitializeKanban\x12#.kanban_package.CreateKanbanRequest\x1a\x1d.kanban_package.BoardResponse\x12?\n\x08\x41\x64\x64Label\x12\x1c.kanban_package.LabelRequest\x1a\x15.kanban_package.Label\x12?\n\x07\x41\x64\x64Item\x12\x1e.kanban_package.AddItemRequest\x1a\x14.kanban_package.Item\x12K\n\x08GetItems\x12\x1e.kanban_package.GetItemRequest\x1a\x1f.kanban_package.GetItemResponse\x12\x45\n\nUpdateItem\x12!.kanban_package.UpdateItemRequest\x1a\x14.kanban_package.Item\x12L\n\x0b\x45xportBoard\x12\x1d.kanban_package.BoardResponse\x1a\x1e.kanban_package.ExportResponseB\tZ\x07./protob\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -23,20 +23,46 @@ if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
   DESCRIPTOR._serialized_options = b'Z\007./proto'
-  _globals['_CREATEKANBANREQUEST']._serialized_start=65
-  _globals['_CREATEKANBANREQUEST']._serialized_end=109
-  _globals['_USERACCOUNT']._serialized_start=112
-  _globals['_USERACCOUNT']._serialized_end=322
-  _globals['_GETKANBANREQUEST']._serialized_start=324
-  _globals['_GETKANBANREQUEST']._serialized_end=354
-  _globals['_ITEM']._serialized_start=357
-  _globals['_ITEM']._serialized_end=633
-  _globals['_ITEM_PRIORITY']._serialized_start=595
-  _globals['_ITEM_PRIORITY']._serialized_end=633
-  _globals['_KANBANRESPONSE']._serialized_start=635
-  _globals['_KANBANRESPONSE']._serialized_end=723
-  _globals['_UPDATESTATUSREQUEST']._serialized_start=725
-  _globals['_UPDATESTATUSREQUEST']._serialized_end=774
-  _globals['_KANBANPACKAGE']._serialized_start=777
-  _globals['_KANBANPACKAGE']._serialized_end=1145
+  _ITEM_LINKSENTRY._options = None
+  _ITEM_LINKSENTRY._serialized_options = b'8\001'
+  _ADDITEMREQUEST_LINKSENTRY._options = None
+  _ADDITEMREQUEST_LINKSENTRY._serialized_options = b'8\001'
+  _UPDATEITEMREQUEST_LINKSENTRY._options = None
+  _UPDATEITEMREQUEST_LINKSENTRY._serialized_options = b'8\001'
+  _globals['_STATUS']._serialized_start=1629
+  _globals['_STATUS']._serialized_end=1703
+  _globals['_USERACCOUNT']._serialized_start=66
+  _globals['_USERACCOUNT']._serialized_end=327
+  _globals['_LABEL']._serialized_start=329
+  _globals['_LABEL']._serialized_end=394
+  _globals['_COMMENT']._serialized_start=396
+  _globals['_COMMENT']._serialized_end=450
+  _globals['_ITEM']._serialized_start=453
+  _globals['_ITEM']._serialized_end=715
+  _globals['_ITEM_LINKSENTRY']._serialized_start=671
+  _globals['_ITEM_LINKSENTRY']._serialized_end=715
+  _globals['_BOARD']._serialized_start=717
+  _globals['_BOARD']._serialized_end=812
+  _globals['_CREATEKANBANREQUEST']._serialized_start=814
+  _globals['_CREATEKANBANREQUEST']._serialized_end=858
+  _globals['_LABELREQUEST']._serialized_start=860
+  _globals['_LABELREQUEST']._serialized_end=920
+  _globals['_ADDITEMREQUEST']._serialized_start=923
+  _globals['_ADDITEMREQUEST']._serialized_end=1156
+  _globals['_ADDITEMREQUEST_LINKSENTRY']._serialized_start=671
+  _globals['_ADDITEMREQUEST_LINKSENTRY']._serialized_end=715
+  _globals['_BOARDRESPONSE']._serialized_start=1158
+  _globals['_BOARDRESPONSE']._serialized_end=1185
+  _globals['_GETITEMREQUEST']._serialized_start=1187
+  _globals['_GETITEMREQUEST']._serialized_end=1232
+  _globals['_GETITEMRESPONSE']._serialized_start=1234
+  _globals['_GETITEMRESPONSE']._serialized_end=1302
+  _globals['_EXPORTRESPONSE']._serialized_start=1304
+  _globals['_EXPORTRESPONSE']._serialized_end=1342
+  _globals['_UPDATEITEMREQUEST']._serialized_start=1345
+  _globals['_UPDATEITEMREQUEST']._serialized_end=1627
+  _globals['_UPDATEITEMREQUEST_LINKSENTRY']._serialized_start=671
+  _globals['_UPDATEITEMREQUEST_LINKSENTRY']._serialized_end=715
+  _globals['_KANBANPACKAGE']._serialized_start=1706
+  _globals['_KANBANPACKAGE']._serialized_end=2165
 # @@protoc_insertion_point(module_scope)

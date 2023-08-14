@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import kanban_pb2 as kanban__pb2
+import pb.kanban_pb2 as kanban__pb2
 
 
 class KanbanPackageStub(object):
@@ -17,27 +17,32 @@ class KanbanPackageStub(object):
         self.InitializeKanban = channel.unary_unary(
                 '/kanban_package.KanbanPackage/InitializeKanban',
                 request_serializer=kanban__pb2.CreateKanbanRequest.SerializeToString,
-                response_deserializer=kanban__pb2.UserAccount.FromString,
+                response_deserializer=kanban__pb2.BoardResponse.FromString,
                 )
-        self.GetKanban = channel.unary_unary(
-                '/kanban_package.KanbanPackage/GetKanban',
-                request_serializer=kanban__pb2.GetKanbanRequest.SerializeToString,
-                response_deserializer=kanban__pb2.KanbanResponse.FromString,
+        self.AddLabel = channel.unary_unary(
+                '/kanban_package.KanbanPackage/AddLabel',
+                request_serializer=kanban__pb2.LabelRequest.SerializeToString,
+                response_deserializer=kanban__pb2.Label.FromString,
                 )
         self.AddItem = channel.unary_unary(
                 '/kanban_package.KanbanPackage/AddItem',
-                request_serializer=kanban__pb2.Item.SerializeToString,
+                request_serializer=kanban__pb2.AddItemRequest.SerializeToString,
                 response_deserializer=kanban__pb2.Item.FromString,
                 )
-        self.UpdateStatus = channel.unary_unary(
-                '/kanban_package.KanbanPackage/UpdateStatus',
-                request_serializer=kanban__pb2.UpdateStatusRequest.SerializeToString,
-                response_deserializer=kanban__pb2.Item.FromString,
+        self.GetItems = channel.unary_unary(
+                '/kanban_package.KanbanPackage/GetItems',
+                request_serializer=kanban__pb2.GetItemRequest.SerializeToString,
+                response_deserializer=kanban__pb2.GetItemResponse.FromString,
                 )
         self.UpdateItem = channel.unary_unary(
                 '/kanban_package.KanbanPackage/UpdateItem',
-                request_serializer=kanban__pb2.Item.SerializeToString,
+                request_serializer=kanban__pb2.UpdateItemRequest.SerializeToString,
                 response_deserializer=kanban__pb2.Item.FromString,
+                )
+        self.ExportBoard = channel.unary_unary(
+                '/kanban_package.KanbanPackage/ExportBoard',
+                request_serializer=kanban__pb2.BoardResponse.SerializeToString,
+                response_deserializer=kanban__pb2.ExportResponse.FromString,
                 )
 
 
@@ -50,7 +55,7 @@ class KanbanPackageServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetKanban(self, request, context):
+    def AddLabel(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -62,7 +67,7 @@ class KanbanPackageServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def UpdateStatus(self, request, context):
+    def GetItems(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -74,33 +79,44 @@ class KanbanPackageServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ExportBoard(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_KanbanPackageServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'InitializeKanban': grpc.unary_unary_rpc_method_handler(
                     servicer.InitializeKanban,
                     request_deserializer=kanban__pb2.CreateKanbanRequest.FromString,
-                    response_serializer=kanban__pb2.UserAccount.SerializeToString,
+                    response_serializer=kanban__pb2.BoardResponse.SerializeToString,
             ),
-            'GetKanban': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetKanban,
-                    request_deserializer=kanban__pb2.GetKanbanRequest.FromString,
-                    response_serializer=kanban__pb2.KanbanResponse.SerializeToString,
+            'AddLabel': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddLabel,
+                    request_deserializer=kanban__pb2.LabelRequest.FromString,
+                    response_serializer=kanban__pb2.Label.SerializeToString,
             ),
             'AddItem': grpc.unary_unary_rpc_method_handler(
                     servicer.AddItem,
-                    request_deserializer=kanban__pb2.Item.FromString,
+                    request_deserializer=kanban__pb2.AddItemRequest.FromString,
                     response_serializer=kanban__pb2.Item.SerializeToString,
             ),
-            'UpdateStatus': grpc.unary_unary_rpc_method_handler(
-                    servicer.UpdateStatus,
-                    request_deserializer=kanban__pb2.UpdateStatusRequest.FromString,
-                    response_serializer=kanban__pb2.Item.SerializeToString,
+            'GetItems': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetItems,
+                    request_deserializer=kanban__pb2.GetItemRequest.FromString,
+                    response_serializer=kanban__pb2.GetItemResponse.SerializeToString,
             ),
             'UpdateItem': grpc.unary_unary_rpc_method_handler(
                     servicer.UpdateItem,
-                    request_deserializer=kanban__pb2.Item.FromString,
+                    request_deserializer=kanban__pb2.UpdateItemRequest.FromString,
                     response_serializer=kanban__pb2.Item.SerializeToString,
+            ),
+            'ExportBoard': grpc.unary_unary_rpc_method_handler(
+                    servicer.ExportBoard,
+                    request_deserializer=kanban__pb2.BoardResponse.FromString,
+                    response_serializer=kanban__pb2.ExportResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -125,12 +141,12 @@ class KanbanPackage(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/InitializeKanban',
             kanban__pb2.CreateKanbanRequest.SerializeToString,
-            kanban__pb2.UserAccount.FromString,
+            kanban__pb2.BoardResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def GetKanban(request,
+    def AddLabel(request,
             target,
             options=(),
             channel_credentials=None,
@@ -140,9 +156,9 @@ class KanbanPackage(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/GetKanban',
-            kanban__pb2.GetKanbanRequest.SerializeToString,
-            kanban__pb2.KanbanResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/AddLabel',
+            kanban__pb2.LabelRequest.SerializeToString,
+            kanban__pb2.Label.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -158,13 +174,13 @@ class KanbanPackage(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/AddItem',
-            kanban__pb2.Item.SerializeToString,
+            kanban__pb2.AddItemRequest.SerializeToString,
             kanban__pb2.Item.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def UpdateStatus(request,
+    def GetItems(request,
             target,
             options=(),
             channel_credentials=None,
@@ -174,9 +190,9 @@ class KanbanPackage(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/UpdateStatus',
-            kanban__pb2.UpdateStatusRequest.SerializeToString,
-            kanban__pb2.Item.FromString,
+        return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/GetItems',
+            kanban__pb2.GetItemRequest.SerializeToString,
+            kanban__pb2.GetItemResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -192,7 +208,24 @@ class KanbanPackage(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/UpdateItem',
-            kanban__pb2.Item.SerializeToString,
+            kanban__pb2.UpdateItemRequest.SerializeToString,
             kanban__pb2.Item.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ExportBoard(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/ExportBoard',
+            kanban__pb2.BoardResponse.SerializeToString,
+            kanban__pb2.ExportResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

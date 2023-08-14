@@ -7,11 +7,18 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
-class CreateKanbanRequest(_message.Message):
-    __slots__ = ["UserAccountId"]
-    USERACCOUNTID_FIELD_NUMBER: _ClassVar[int]
-    UserAccountId: str
-    def __init__(self, UserAccountId: _Optional[str] = ...) -> None: ...
+class STATUS(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = []
+    TODO: _ClassVar[STATUS]
+    PROGRESS: _ClassVar[STATUS]
+    COMPLETED: _ClassVar[STATUS]
+    CANCELED: _ClassVar[STATUS]
+    BACKLOG: _ClassVar[STATUS]
+TODO: STATUS
+PROGRESS: STATUS
+COMPLETED: STATUS
+CANCELED: STATUS
+BACKLOG: STATUS
 
 class UserAccount(_message.Message):
     __slots__ = ["id", "account_name", "email", "created_at", "photo_url", "users", "owner", "pageId", "bucketId", "boardId"]
@@ -37,58 +44,151 @@ class UserAccount(_message.Message):
     boardId: str
     def __init__(self, id: _Optional[str] = ..., account_name: _Optional[str] = ..., email: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., photo_url: _Optional[str] = ..., users: _Optional[_Iterable[str]] = ..., owner: _Optional[str] = ..., pageId: _Optional[str] = ..., bucketId: _Optional[str] = ..., boardId: _Optional[str] = ...) -> None: ...
 
-class GetKanbanRequest(_message.Message):
+class Label(_message.Message):
+    __slots__ = ["id", "name", "color", "boardId"]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    COLOR_FIELD_NUMBER: _ClassVar[int]
+    BOARDID_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    name: str
+    color: str
+    boardId: str
+    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., color: _Optional[str] = ..., boardId: _Optional[str] = ...) -> None: ...
+
+class Comment(_message.Message):
+    __slots__ = ["id", "userId", "message"]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    USERID_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    userId: str
+    message: str
+    def __init__(self, id: _Optional[str] = ..., userId: _Optional[str] = ..., message: _Optional[str] = ...) -> None: ...
+
+class Item(_message.Message):
+    __slots__ = ["id", "label", "status", "title", "desc", "links", "comments"]
+    class LinksEntry(_message.Message):
+        __slots__ = ["key", "value"]
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: str
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[str] = ...) -> None: ...
+    ID_FIELD_NUMBER: _ClassVar[int]
+    LABEL_FIELD_NUMBER: _ClassVar[int]
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    TITLE_FIELD_NUMBER: _ClassVar[int]
+    DESC_FIELD_NUMBER: _ClassVar[int]
+    LINKS_FIELD_NUMBER: _ClassVar[int]
+    COMMENTS_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    label: Label
+    status: STATUS
+    title: str
+    desc: str
+    links: _containers.ScalarMap[str, str]
+    comments: _containers.RepeatedCompositeFieldContainer[Comment]
+    def __init__(self, id: _Optional[str] = ..., label: _Optional[_Union[Label, _Mapping]] = ..., status: _Optional[_Union[STATUS, str]] = ..., title: _Optional[str] = ..., desc: _Optional[str] = ..., links: _Optional[_Mapping[str, str]] = ..., comments: _Optional[_Iterable[_Union[Comment, _Mapping]]] = ...) -> None: ...
+
+class Board(_message.Message):
+    __slots__ = ["id", "items", "labels"]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    ITEMS_FIELD_NUMBER: _ClassVar[int]
+    LABELS_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    items: _containers.RepeatedCompositeFieldContainer[Item]
+    labels: _containers.RepeatedCompositeFieldContainer[Label]
+    def __init__(self, id: _Optional[str] = ..., items: _Optional[_Iterable[_Union[Item, _Mapping]]] = ..., labels: _Optional[_Iterable[_Union[Label, _Mapping]]] = ...) -> None: ...
+
+class CreateKanbanRequest(_message.Message):
+    __slots__ = ["UserAccountId"]
+    USERACCOUNTID_FIELD_NUMBER: _ClassVar[int]
+    UserAccountId: str
+    def __init__(self, UserAccountId: _Optional[str] = ...) -> None: ...
+
+class LabelRequest(_message.Message):
+    __slots__ = ["name", "color", "boardId"]
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    COLOR_FIELD_NUMBER: _ClassVar[int]
+    BOARDID_FIELD_NUMBER: _ClassVar[int]
+    name: str
+    color: str
+    boardId: str
+    def __init__(self, name: _Optional[str] = ..., color: _Optional[str] = ..., boardId: _Optional[str] = ...) -> None: ...
+
+class AddItemRequest(_message.Message):
+    __slots__ = ["id", "label", "status", "title", "desc", "links", "boardId"]
+    class LinksEntry(_message.Message):
+        __slots__ = ["key", "value"]
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: str
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[str] = ...) -> None: ...
+    ID_FIELD_NUMBER: _ClassVar[int]
+    LABEL_FIELD_NUMBER: _ClassVar[int]
+    STATUS_FIELD_NUMBER: _ClassVar[int]
+    TITLE_FIELD_NUMBER: _ClassVar[int]
+    DESC_FIELD_NUMBER: _ClassVar[int]
+    LINKS_FIELD_NUMBER: _ClassVar[int]
+    BOARDID_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    label: str
+    status: STATUS
+    title: str
+    desc: str
+    links: _containers.ScalarMap[str, str]
+    boardId: str
+    def __init__(self, id: _Optional[str] = ..., label: _Optional[str] = ..., status: _Optional[_Union[STATUS, str]] = ..., title: _Optional[str] = ..., desc: _Optional[str] = ..., links: _Optional[_Mapping[str, str]] = ..., boardId: _Optional[str] = ...) -> None: ...
+
+class BoardResponse(_message.Message):
     __slots__ = ["id"]
     ID_FIELD_NUMBER: _ClassVar[int]
     id: str
     def __init__(self, id: _Optional[str] = ...) -> None: ...
 
-class Item(_message.Message):
-    __slots__ = ["id", "title", "description", "priority", "script", "reference", "storage", "status", "created_at", "boardId"]
-    class PRIORITY(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
-        __slots__ = []
-        LOW: _ClassVar[Item.PRIORITY]
-        MED: _ClassVar[Item.PRIORITY]
-        HIGH: _ClassVar[Item.PRIORITY]
-    LOW: Item.PRIORITY
-    MED: Item.PRIORITY
-    HIGH: Item.PRIORITY
-    ID_FIELD_NUMBER: _ClassVar[int]
-    TITLE_FIELD_NUMBER: _ClassVar[int]
-    DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
-    PRIORITY_FIELD_NUMBER: _ClassVar[int]
-    SCRIPT_FIELD_NUMBER: _ClassVar[int]
-    REFERENCE_FIELD_NUMBER: _ClassVar[int]
-    STORAGE_FIELD_NUMBER: _ClassVar[int]
-    STATUS_FIELD_NUMBER: _ClassVar[int]
-    CREATED_AT_FIELD_NUMBER: _ClassVar[int]
-    BOARDID_FIELD_NUMBER: _ClassVar[int]
-    id: str
-    title: str
-    description: str
-    priority: Item.PRIORITY
-    script: str
-    reference: str
-    storage: str
-    status: str
-    created_at: _timestamp_pb2.Timestamp
-    boardId: str
-    def __init__(self, id: _Optional[str] = ..., title: _Optional[str] = ..., description: _Optional[str] = ..., priority: _Optional[_Union[Item.PRIORITY, str]] = ..., script: _Optional[str] = ..., reference: _Optional[str] = ..., storage: _Optional[str] = ..., status: _Optional[str] = ..., created_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., boardId: _Optional[str] = ...) -> None: ...
+class GetItemRequest(_message.Message):
+    __slots__ = ["page", "limit"]
+    PAGE_FIELD_NUMBER: _ClassVar[int]
+    LIMIT_FIELD_NUMBER: _ClassVar[int]
+    page: int
+    limit: int
+    def __init__(self, page: _Optional[int] = ..., limit: _Optional[int] = ...) -> None: ...
 
-class KanbanResponse(_message.Message):
-    __slots__ = ["id", "items", "userAccountId"]
-    ID_FIELD_NUMBER: _ClassVar[int]
+class GetItemResponse(_message.Message):
+    __slots__ = ["items", "page"]
     ITEMS_FIELD_NUMBER: _ClassVar[int]
-    USERACCOUNTID_FIELD_NUMBER: _ClassVar[int]
-    id: str
+    PAGE_FIELD_NUMBER: _ClassVar[int]
     items: _containers.RepeatedCompositeFieldContainer[Item]
-    userAccountId: str
-    def __init__(self, id: _Optional[str] = ..., items: _Optional[_Iterable[_Union[Item, _Mapping]]] = ..., userAccountId: _Optional[str] = ...) -> None: ...
+    page: int
+    def __init__(self, items: _Optional[_Iterable[_Union[Item, _Mapping]]] = ..., page: _Optional[int] = ...) -> None: ...
 
-class UpdateStatusRequest(_message.Message):
-    __slots__ = ["id", "status"]
+class ExportResponse(_message.Message):
+    __slots__ = ["downloadLink"]
+    DOWNLOADLINK_FIELD_NUMBER: _ClassVar[int]
+    downloadLink: str
+    def __init__(self, downloadLink: _Optional[str] = ...) -> None: ...
+
+class UpdateItemRequest(_message.Message):
+    __slots__ = ["id", "label", "status", "title", "desc", "links"]
+    class LinksEntry(_message.Message):
+        __slots__ = ["key", "value"]
+        KEY_FIELD_NUMBER: _ClassVar[int]
+        VALUE_FIELD_NUMBER: _ClassVar[int]
+        key: str
+        value: str
+        def __init__(self, key: _Optional[str] = ..., value: _Optional[str] = ...) -> None: ...
     ID_FIELD_NUMBER: _ClassVar[int]
+    LABEL_FIELD_NUMBER: _ClassVar[int]
     STATUS_FIELD_NUMBER: _ClassVar[int]
+    TITLE_FIELD_NUMBER: _ClassVar[int]
+    DESC_FIELD_NUMBER: _ClassVar[int]
+    LINKS_FIELD_NUMBER: _ClassVar[int]
     id: str
-    status: str
-    def __init__(self, id: _Optional[str] = ..., status: _Optional[str] = ...) -> None: ...
+    label: str
+    status: STATUS
+    title: str
+    desc: str
+    links: _containers.ScalarMap[str, str]
+    def __init__(self, id: _Optional[str] = ..., label: _Optional[str] = ..., status: _Optional[_Union[STATUS, str]] = ..., title: _Optional[str] = ..., desc: _Optional[str] = ..., links: _Optional[_Mapping[str, str]] = ...) -> None: ...
