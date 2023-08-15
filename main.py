@@ -2,19 +2,29 @@ import grpc
 
 from pb.kanban_pb2_grpc import KanbanPackageServicer
 import pb.kanban_pb2 as models
-from uuid import uuid4
 from concurrent import futures
 import pb.kanban_pb2_grpc as kanban_grpc
+
+from database import createBoard, addLabel
 
 class Service(KanbanPackageServicer):
 
     def InitializeKanban(self, request: models.CreateKanbanRequest, context):
         user_Account = request.UserAccountId
-        print("heelo")
-        return models.BoardResponse(id=str(uuid4()))
+        id = createBoard(user_Account)
+        return models.BoardResponse(id=id)
 
-    def GetKanban(self, request, context):
-        pass
+    def AddLabel(self, request: models.LabelRequest, context):
+        name = request.name
+        color = request.color
+        board_id = request.boardId
+        label = addLabel(name, color, board_id)
+        return models.Label(
+            id=label.id,
+            name=name,
+            color=color,
+            boardId=board_id
+        )
 
     def AddItem(self, request, context):
         pass
