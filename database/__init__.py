@@ -24,12 +24,12 @@ class KanbanLabel(BaseModel):
 
 class Item(BaseModel):
     id = CharField(primary_key=True)
-    label = KanbanLabel
     status = CharField()
     title = CharField()
     desc = CharField()
     links = CharField()
     board = ForeignKeyField(Board, backref="items")
+    label = ForeignKeyField(KanbanLabel, backref="item")
 
 
 class Comment(BaseModel):
@@ -49,7 +49,9 @@ def createBoard(user_Account: str) -> str:
             board = Board.create(
                 id=str(uuid4()),
             )
-            db.execute_sql("update user_accounts set board_id = '{}' where id = '{}' and user_accounts.board_id is not null".format(board.id, user_Account))
+            db.execute_sql(
+                "update user_accounts set board_id = '{}' where id = '{}' and user_accounts.board_id is not null".format(
+                    board.id, user_Account))
         return board.id
     except Exception as e:
         print(e)
@@ -66,5 +68,22 @@ def addLabel(name: str, color: str, board_id: str) -> KanbanLabel:
                 boardId=board_id
             )
         return label
+    except Exception as e:
+        print(e)
+
+
+def addItem(label: str, status: str, title: str, desc: str, links: str, board_id: str) -> Item:
+    try:
+        with db.atomic():
+            item = Item.create(
+                id=str(uuid4()),
+                label=label,
+                status=status,
+                title=title,
+                desc=desc,
+                links=links,
+                board=board_id
+            )
+            return item
     except Exception as e:
         print(e)

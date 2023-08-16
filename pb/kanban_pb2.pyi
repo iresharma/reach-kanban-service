@@ -118,7 +118,7 @@ class LabelRequest(_message.Message):
     def __init__(self, name: _Optional[str] = ..., color: _Optional[str] = ..., boardId: _Optional[str] = ...) -> None: ...
 
 class AddItemRequest(_message.Message):
-    __slots__ = ["id", "label", "status", "title", "desc", "links", "boardId"]
+    __slots__ = ["label", "status", "title", "desc", "links", "boardId"]
     class LinksEntry(_message.Message):
         __slots__ = ["key", "value"]
         KEY_FIELD_NUMBER: _ClassVar[int]
@@ -126,21 +126,19 @@ class AddItemRequest(_message.Message):
         key: str
         value: str
         def __init__(self, key: _Optional[str] = ..., value: _Optional[str] = ...) -> None: ...
-    ID_FIELD_NUMBER: _ClassVar[int]
     LABEL_FIELD_NUMBER: _ClassVar[int]
     STATUS_FIELD_NUMBER: _ClassVar[int]
     TITLE_FIELD_NUMBER: _ClassVar[int]
     DESC_FIELD_NUMBER: _ClassVar[int]
     LINKS_FIELD_NUMBER: _ClassVar[int]
     BOARDID_FIELD_NUMBER: _ClassVar[int]
-    id: str
     label: str
     status: STATUS
     title: str
     desc: str
     links: _containers.ScalarMap[str, str]
     boardId: str
-    def __init__(self, id: _Optional[str] = ..., label: _Optional[str] = ..., status: _Optional[_Union[STATUS, str]] = ..., title: _Optional[str] = ..., desc: _Optional[str] = ..., links: _Optional[_Mapping[str, str]] = ..., boardId: _Optional[str] = ...) -> None: ...
+    def __init__(self, label: _Optional[str] = ..., status: _Optional[_Union[STATUS, str]] = ..., title: _Optional[str] = ..., desc: _Optional[str] = ..., links: _Optional[_Mapping[str, str]] = ..., boardId: _Optional[str] = ...) -> None: ...
 
 class BoardResponse(_message.Message):
     __slots__ = ["id"]
