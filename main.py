@@ -5,7 +5,7 @@ import pb.kanban_pb2 as models
 from concurrent import futures
 import pb.kanban_pb2_grpc as kanban_grpc
 
-from database import createBoard, addLabel, addItem
+from database import createBoard, addLabel, addItem, getItem
 
 
 class Service(KanbanPackageServicer):
@@ -35,14 +35,30 @@ class Service(KanbanPackageServicer):
         links = request.links
         boardId = request.boardId
         item = addItem(label, str(status), title, desc, str(links), boardId)
-        return models.Item(
-            label=item.label,
-            status=item.status,
-            title=item.title,
-            desc=item.desc,
-            links=item.links,
-            comments=[]
+        try:
+            model = models.Item(
+                id=item.id,
+                # label=item.label,
+                status=item.status,
+                title=item.title,
+                desc=item.desc,
+                links=item.links,
+                comments=[]
+            )
+            return model
+        except Exception as e:
+            print(e)
+
+    def GetItems(self, request: models.GetItemRequest, context):
+        page = request.page
+        limit = request.limit
+        board = request.board
+        items = getItem(page, limit, board)
+        return models.GetItemResponse(
+            items=items,
+            page=(page + 1)
         )
+
 
     def UpdateItem(self, request, context):
         pass

@@ -68,13 +68,6 @@ class Comment(_message.Message):
 
 class Item(_message.Message):
     __slots__ = ["id", "label", "status", "title", "desc", "links", "comments"]
-    class LinksEntry(_message.Message):
-        __slots__ = ["key", "value"]
-        KEY_FIELD_NUMBER: _ClassVar[int]
-        VALUE_FIELD_NUMBER: _ClassVar[int]
-        key: str
-        value: str
-        def __init__(self, key: _Optional[str] = ..., value: _Optional[str] = ...) -> None: ...
     ID_FIELD_NUMBER: _ClassVar[int]
     LABEL_FIELD_NUMBER: _ClassVar[int]
     STATUS_FIELD_NUMBER: _ClassVar[int]
@@ -87,9 +80,9 @@ class Item(_message.Message):
     status: STATUS
     title: str
     desc: str
-    links: _containers.ScalarMap[str, str]
+    links: str
     comments: _containers.RepeatedCompositeFieldContainer[Comment]
-    def __init__(self, id: _Optional[str] = ..., label: _Optional[_Union[Label, _Mapping]] = ..., status: _Optional[_Union[STATUS, str]] = ..., title: _Optional[str] = ..., desc: _Optional[str] = ..., links: _Optional[_Mapping[str, str]] = ..., comments: _Optional[_Iterable[_Union[Comment, _Mapping]]] = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., label: _Optional[_Union[Label, _Mapping]] = ..., status: _Optional[_Union[STATUS, str]] = ..., title: _Optional[str] = ..., desc: _Optional[str] = ..., links: _Optional[str] = ..., comments: _Optional[_Iterable[_Union[Comment, _Mapping]]] = ...) -> None: ...
 
 class Board(_message.Message):
     __slots__ = ["id", "items", "labels"]
@@ -147,12 +140,14 @@ class BoardResponse(_message.Message):
     def __init__(self, id: _Optional[str] = ...) -> None: ...
 
 class GetItemRequest(_message.Message):
-    __slots__ = ["page", "limit"]
+    __slots__ = ["page", "limit", "board"]
     PAGE_FIELD_NUMBER: _ClassVar[int]
     LIMIT_FIELD_NUMBER: _ClassVar[int]
+    BOARD_FIELD_NUMBER: _ClassVar[int]
     page: int
     limit: int
-    def __init__(self, page: _Optional[int] = ..., limit: _Optional[int] = ...) -> None: ...
+    board: str
+    def __init__(self, page: _Optional[int] = ..., limit: _Optional[int] = ..., board: _Optional[str] = ...) -> None: ...
 
 class GetItemResponse(_message.Message):
     __slots__ = ["items", "page"]
@@ -170,13 +165,6 @@ class ExportResponse(_message.Message):
 
 class UpdateItemRequest(_message.Message):
     __slots__ = ["id", "label", "status", "title", "desc", "links"]
-    class LinksEntry(_message.Message):
-        __slots__ = ["key", "value"]
-        KEY_FIELD_NUMBER: _ClassVar[int]
-        VALUE_FIELD_NUMBER: _ClassVar[int]
-        key: str
-        value: str
-        def __init__(self, key: _Optional[str] = ..., value: _Optional[str] = ...) -> None: ...
     ID_FIELD_NUMBER: _ClassVar[int]
     LABEL_FIELD_NUMBER: _ClassVar[int]
     STATUS_FIELD_NUMBER: _ClassVar[int]
@@ -188,5 +176,5 @@ class UpdateItemRequest(_message.Message):
     status: STATUS
     title: str
     desc: str
-    links: _containers.ScalarMap[str, str]
-    def __init__(self, id: _Optional[str] = ..., label: _Optional[str] = ..., status: _Optional[_Union[STATUS, str]] = ..., title: _Optional[str] = ..., desc: _Optional[str] = ..., links: _Optional[_Mapping[str, str]] = ...) -> None: ...
+    links: str
+    def __init__(self, id: _Optional[str] = ..., label: _Optional[str] = ..., status: _Optional[_Union[STATUS, str]] = ..., title: _Optional[str] = ..., desc: _Optional[str] = ..., links: _Optional[str] = ...) -> None: ...

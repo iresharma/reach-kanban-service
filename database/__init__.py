@@ -1,6 +1,7 @@
-from peewee import PostgresqlDatabase, Model, CharField, ForeignKeyField
+from peewee import PostgresqlDatabase, Model, CharField, ForeignKeyField, JOIN
 from os import environ
 from uuid import uuid4
+from pb.kanban_pb2 import Item as RPCItem, Label
 
 db = PostgresqlDatabase(environ['DB_NAME'], user=environ['DB_USER'], password=environ['DB_PASSWORD'],
                         host=environ['DB_HOST'], port=environ["DB_PORT"])
@@ -75,15 +76,57 @@ def addLabel(name: str, color: str, board_id: str) -> KanbanLabel:
 def addItem(label: str, status: str, title: str, desc: str, links: str, board_id: str) -> Item:
     try:
         with db.atomic():
+            status_list = [
+                "TODO",
+                "PROGRESS",
+                "COMPLETED",
+                "CANCELED",
+                "BACKLOG",
+            ]
             item = Item.create(
                 id=str(uuid4()),
                 label=label,
-                status=status,
+                status=status_list[int(status)],
                 title=title,
                 desc=desc,
                 links=links,
                 board=board_id
             )
             return item
+    except Exception as e:
+        print(e)
+
+
+def ItemToRPCItem(item: dict) -> RPCItem:
+    return RPCItem(
+        id=item["id"],
+        label=Label(
+            id=item["label"],
+            name=item["name"],
+            color=item["color"]
+        ),
+        status=item["status"],
+        title=item["title"],
+        desc=item["desc"],
+        links=item["links"],
+    )
+
+
+def getItem(page: int, limit: int, board_id: str) -> list:
+    try:
+        with db.atomic():
+            keys = [
+                Item.id,
+                Item.status,
+                Item.title,
+                Item.desc,
+                Item.links,
+                Item.label,
+                KanbanLabel.color,
+                KanbanLabel.name
+            ]
+            items = Item.select(*keys).join(KanbanLabel).offset(page * limit).limit(limit).where(
+                Item.board == board_id).dicts()
+            return list(map(ItemToRPCItem, items))
     except Exception as e:
         print(e)
