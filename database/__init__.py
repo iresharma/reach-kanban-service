@@ -1,10 +1,23 @@
 from peewee import PostgresqlDatabase, Model, CharField, ForeignKeyField, JOIN
 from os import environ
 from uuid import uuid4
-from pb.kanban_pb2 import Item as RPCItem, Label
+from pb.kanban_pb2 import Item as RPCItem, Label, STATUS
 
 db = PostgresqlDatabase(environ['DB_NAME'], user=environ['DB_USER'], password=environ['DB_PASSWORD'],
                         host=environ['DB_HOST'], port=environ["DB_PORT"])
+
+status = {
+    "0": "TODO",
+    "1": "PROGRESS",
+    "2": "COMPLETED",
+    "3": "CANCELED",
+    "4": "BACKLOG",
+    "TODO": "TODO",
+    "PROGRESS": "PROGRESS",
+    "COMPLETED": "COMPLETED",
+    "CANCELED": "CANCELED",
+    "BACKLOG": "BACKLOG",
+}
 
 
 class BaseModel(Model):
@@ -84,7 +97,7 @@ def addItem(label: str, status: str, title: str, desc: str, links: str, board_id
                 "BACKLOG",
             ]
             item = Item.create(
-                id=str(uuid4()),
+                id="TASK-" + str(uuid4()).split("-").pop(),
                 label=label,
                 status=status_list[int(status)],
                 title=title,
@@ -105,7 +118,7 @@ def ItemToRPCItem(item: dict) -> RPCItem:
             name=item["name"],
             color=item["color"]
         ),
-        status=item["status"],
+        status=status[item["status"]],
         title=item["title"],
         desc=item["desc"],
         links=item["links"],
