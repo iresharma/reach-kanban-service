@@ -39,6 +39,31 @@ class KanbanPackageStub(object):
                 request_serializer=kanban__pb2.UpdateItemRequest.SerializeToString,
                 response_deserializer=kanban__pb2.Item.FromString,
                 )
+        self.AddComment = channel.unary_unary(
+                '/kanban_package.KanbanPackage/AddComment',
+                request_serializer=kanban__pb2.CommentRequest.SerializeToString,
+                response_deserializer=kanban__pb2.Comment.FromString,
+                )
+        self.UpdateComment = channel.unary_unary(
+                '/kanban_package.KanbanPackage/UpdateComment',
+                request_serializer=kanban__pb2.UpdateCommentRequest.SerializeToString,
+                response_deserializer=kanban__pb2.Comment.FromString,
+                )
+        self.DeleteComment = channel.unary_unary(
+                '/kanban_package.KanbanPackage/DeleteComment',
+                request_serializer=kanban__pb2.DeleteCommentRequest.SerializeToString,
+                response_deserializer=kanban__pb2.VoidResp.FromString,
+                )
+        self.AddReaction = channel.unary_unary(
+                '/kanban_package.KanbanPackage/AddReaction',
+                request_serializer=kanban__pb2.AddReactionRequest.SerializeToString,
+                response_deserializer=kanban__pb2.VoidResp.FromString,
+                )
+        self.DeleteReaction = channel.unary_unary(
+                '/kanban_package.KanbanPackage/DeleteReaction',
+                request_serializer=kanban__pb2.DeleteReactionRequest.SerializeToString,
+                response_deserializer=kanban__pb2.VoidResp.FromString,
+                )
         self.ExportBoard = channel.unary_unary(
                 '/kanban_package.KanbanPackage/ExportBoard',
                 request_serializer=kanban__pb2.BoardResponse.SerializeToString,
@@ -79,6 +104,36 @@ class KanbanPackageServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def AddComment(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdateComment(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteComment(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def AddReaction(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteReaction(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def ExportBoard(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -112,6 +167,31 @@ def add_KanbanPackageServicer_to_server(servicer, server):
                     servicer.UpdateItem,
                     request_deserializer=kanban__pb2.UpdateItemRequest.FromString,
                     response_serializer=kanban__pb2.Item.SerializeToString,
+            ),
+            'AddComment': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddComment,
+                    request_deserializer=kanban__pb2.CommentRequest.FromString,
+                    response_serializer=kanban__pb2.Comment.SerializeToString,
+            ),
+            'UpdateComment': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateComment,
+                    request_deserializer=kanban__pb2.UpdateCommentRequest.FromString,
+                    response_serializer=kanban__pb2.Comment.SerializeToString,
+            ),
+            'DeleteComment': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteComment,
+                    request_deserializer=kanban__pb2.DeleteCommentRequest.FromString,
+                    response_serializer=kanban__pb2.VoidResp.SerializeToString,
+            ),
+            'AddReaction': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddReaction,
+                    request_deserializer=kanban__pb2.AddReactionRequest.FromString,
+                    response_serializer=kanban__pb2.VoidResp.SerializeToString,
+            ),
+            'DeleteReaction': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteReaction,
+                    request_deserializer=kanban__pb2.DeleteReactionRequest.FromString,
+                    response_serializer=kanban__pb2.VoidResp.SerializeToString,
             ),
             'ExportBoard': grpc.unary_unary_rpc_method_handler(
                     servicer.ExportBoard,
@@ -210,6 +290,91 @@ class KanbanPackage(object):
         return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/UpdateItem',
             kanban__pb2.UpdateItemRequest.SerializeToString,
             kanban__pb2.Item.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def AddComment(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/AddComment',
+            kanban__pb2.CommentRequest.SerializeToString,
+            kanban__pb2.Comment.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def UpdateComment(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/UpdateComment',
+            kanban__pb2.UpdateCommentRequest.SerializeToString,
+            kanban__pb2.Comment.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DeleteComment(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/DeleteComment',
+            kanban__pb2.DeleteCommentRequest.SerializeToString,
+            kanban__pb2.VoidResp.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def AddReaction(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/AddReaction',
+            kanban__pb2.AddReactionRequest.SerializeToString,
+            kanban__pb2.VoidResp.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DeleteReaction(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/DeleteReaction',
+            kanban__pb2.DeleteReactionRequest.SerializeToString,
+            kanban__pb2.VoidResp.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

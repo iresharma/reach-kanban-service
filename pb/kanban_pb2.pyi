@@ -57,17 +57,29 @@ class Label(_message.Message):
     def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., color: _Optional[str] = ..., boardId: _Optional[str] = ...) -> None: ...
 
 class Comment(_message.Message):
-    __slots__ = ["id", "userId", "message"]
+    __slots__ = ["id", "userId", "message", "reactions"]
     ID_FIELD_NUMBER: _ClassVar[int]
     USERID_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    REACTIONS_FIELD_NUMBER: _ClassVar[int]
     id: str
     userId: str
     message: str
-    def __init__(self, id: _Optional[str] = ..., userId: _Optional[str] = ..., message: _Optional[str] = ...) -> None: ...
+    reactions: _containers.RepeatedCompositeFieldContainer[Reaction]
+    def __init__(self, id: _Optional[str] = ..., userId: _Optional[str] = ..., message: _Optional[str] = ..., reactions: _Optional[_Iterable[_Union[Reaction, _Mapping]]] = ...) -> None: ...
+
+class Reaction(_message.Message):
+    __slots__ = ["id", "userId", "emoji"]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    USERID_FIELD_NUMBER: _ClassVar[int]
+    EMOJI_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    userId: str
+    emoji: str
+    def __init__(self, id: _Optional[str] = ..., userId: _Optional[str] = ..., emoji: _Optional[str] = ...) -> None: ...
 
 class Item(_message.Message):
-    __slots__ = ["id", "label", "status", "title", "desc", "links", "comments"]
+    __slots__ = ["id", "label", "status", "title", "desc", "links", "comments", "userId"]
     ID_FIELD_NUMBER: _ClassVar[int]
     LABEL_FIELD_NUMBER: _ClassVar[int]
     STATUS_FIELD_NUMBER: _ClassVar[int]
@@ -75,6 +87,7 @@ class Item(_message.Message):
     DESC_FIELD_NUMBER: _ClassVar[int]
     LINKS_FIELD_NUMBER: _ClassVar[int]
     COMMENTS_FIELD_NUMBER: _ClassVar[int]
+    USERID_FIELD_NUMBER: _ClassVar[int]
     id: str
     label: Label
     status: STATUS
@@ -82,7 +95,8 @@ class Item(_message.Message):
     desc: str
     links: str
     comments: _containers.RepeatedCompositeFieldContainer[Comment]
-    def __init__(self, id: _Optional[str] = ..., label: _Optional[_Union[Label, _Mapping]] = ..., status: _Optional[_Union[STATUS, str]] = ..., title: _Optional[str] = ..., desc: _Optional[str] = ..., links: _Optional[str] = ..., comments: _Optional[_Iterable[_Union[Comment, _Mapping]]] = ...) -> None: ...
+    userId: str
+    def __init__(self, id: _Optional[str] = ..., label: _Optional[_Union[Label, _Mapping]] = ..., status: _Optional[_Union[STATUS, str]] = ..., title: _Optional[str] = ..., desc: _Optional[str] = ..., links: _Optional[str] = ..., comments: _Optional[_Iterable[_Union[Comment, _Mapping]]] = ..., userId: _Optional[str] = ...) -> None: ...
 
 class Board(_message.Message):
     __slots__ = ["id", "items", "labels"]
@@ -111,7 +125,7 @@ class LabelRequest(_message.Message):
     def __init__(self, name: _Optional[str] = ..., color: _Optional[str] = ..., boardId: _Optional[str] = ...) -> None: ...
 
 class AddItemRequest(_message.Message):
-    __slots__ = ["label", "status", "title", "desc", "links", "boardId"]
+    __slots__ = ["label", "status", "title", "desc", "links", "boardId", "userId"]
     class LinksEntry(_message.Message):
         __slots__ = ["key", "value"]
         KEY_FIELD_NUMBER: _ClassVar[int]
@@ -125,13 +139,15 @@ class AddItemRequest(_message.Message):
     DESC_FIELD_NUMBER: _ClassVar[int]
     LINKS_FIELD_NUMBER: _ClassVar[int]
     BOARDID_FIELD_NUMBER: _ClassVar[int]
+    USERID_FIELD_NUMBER: _ClassVar[int]
     label: str
     status: STATUS
     title: str
     desc: str
     links: _containers.ScalarMap[str, str]
     boardId: str
-    def __init__(self, label: _Optional[str] = ..., status: _Optional[_Union[STATUS, str]] = ..., title: _Optional[str] = ..., desc: _Optional[str] = ..., links: _Optional[_Mapping[str, str]] = ..., boardId: _Optional[str] = ...) -> None: ...
+    userId: str
+    def __init__(self, label: _Optional[str] = ..., status: _Optional[_Union[STATUS, str]] = ..., title: _Optional[str] = ..., desc: _Optional[str] = ..., links: _Optional[_Mapping[str, str]] = ..., boardId: _Optional[str] = ..., userId: _Optional[str] = ...) -> None: ...
 
 class BoardResponse(_message.Message):
     __slots__ = ["id"]
@@ -178,3 +194,47 @@ class UpdateItemRequest(_message.Message):
     desc: str
     links: str
     def __init__(self, id: _Optional[str] = ..., label: _Optional[str] = ..., status: _Optional[_Union[STATUS, str]] = ..., title: _Optional[str] = ..., desc: _Optional[str] = ..., links: _Optional[str] = ...) -> None: ...
+
+class CommentRequest(_message.Message):
+    __slots__ = ["ItemId", "message", "userId"]
+    ITEMID_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    USERID_FIELD_NUMBER: _ClassVar[int]
+    ItemId: str
+    message: str
+    userId: str
+    def __init__(self, ItemId: _Optional[str] = ..., message: _Optional[str] = ..., userId: _Optional[str] = ...) -> None: ...
+
+class UpdateCommentRequest(_message.Message):
+    __slots__ = ["id", "message"]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    message: str
+    def __init__(self, id: _Optional[str] = ..., message: _Optional[str] = ...) -> None: ...
+
+class DeleteCommentRequest(_message.Message):
+    __slots__ = ["id"]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    def __init__(self, id: _Optional[str] = ...) -> None: ...
+
+class AddReactionRequest(_message.Message):
+    __slots__ = ["userId", "commentId", "emoji"]
+    USERID_FIELD_NUMBER: _ClassVar[int]
+    COMMENTID_FIELD_NUMBER: _ClassVar[int]
+    EMOJI_FIELD_NUMBER: _ClassVar[int]
+    userId: str
+    commentId: str
+    emoji: str
+    def __init__(self, userId: _Optional[str] = ..., commentId: _Optional[str] = ..., emoji: _Optional[str] = ...) -> None: ...
+
+class DeleteReactionRequest(_message.Message):
+    __slots__ = ["id"]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    def __init__(self, id: _Optional[str] = ...) -> None: ...
+
+class VoidResp(_message.Message):
+    __slots__ = []
+    def __init__(self) -> None: ...

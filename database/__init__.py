@@ -44,6 +44,7 @@ class Item(BaseModel):
     links = CharField()
     board = ForeignKeyField(Board, backref="items")
     label = ForeignKeyField(KanbanLabel, backref="item")
+    userId = CharField()
 
 
 class Comment(BaseModel):
@@ -51,6 +52,12 @@ class Comment(BaseModel):
     userId = CharField()
     message = CharField()
     item = ForeignKeyField(Item, backref="comments")
+
+
+class Reaction(BaseModel):
+    id = CharField(primary_key=True)
+    userId = CharField()
+    emoji = CharField()
 
 
 with db:
@@ -86,7 +93,7 @@ def addLabel(name: str, color: str, board_id: str) -> KanbanLabel:
         print(e)
 
 
-def addItem(label: str, status: str, title: str, desc: str, links: str, board_id: str) -> Item:
+def addItem(label: str, status: str, title: str, desc: str, links: str, board_id: str, user_id: str) -> Item:
     try:
         with db.atomic():
             status_list = [
@@ -103,7 +110,8 @@ def addItem(label: str, status: str, title: str, desc: str, links: str, board_id
                 title=title,
                 desc=desc,
                 links=links,
-                board=board_id
+                board=board_id,
+                userId=user_id
             )
             return item
     except Exception as e:
@@ -122,6 +130,7 @@ def ItemToRPCItem(item: dict) -> RPCItem:
         title=item["title"],
         desc=item["desc"],
         links=item["links"],
+        userId=""
     )
 
 
@@ -140,6 +149,22 @@ def getItem(page: int, limit: int, board_id: str) -> list:
             ]
             items = Item.select(*keys).join(KanbanLabel).offset(page * limit).limit(limit).where(
                 Item.board == board_id).dicts()
+            print(list(items))
             return list(map(ItemToRPCItem, items))
     except Exception as e:
         print(e)
+
+
+def updateItem(item_id: str, label: str, input_status: STATUS, title: str, desc: str, links: str):
+    try:
+        with db.atomic():
+            row = Item.update(
+                label=label,
+                status=status[str(input_status)],
+                title=title,
+                desc=desc,
+                links=links
+            ).where(Item.id == item_id)
+            row.execute()
+    except Exception as e:
+        print(type(e))
