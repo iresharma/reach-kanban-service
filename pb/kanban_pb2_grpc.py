@@ -24,6 +24,16 @@ class KanbanPackageStub(object):
                 request_serializer=kanban__pb2.LabelRequest.SerializeToString,
                 response_deserializer=kanban__pb2.Label.FromString,
                 )
+        self.GetLabels = channel.unary_unary(
+                '/kanban_package.KanbanPackage/GetLabels',
+                request_serializer=kanban__pb2.BoardResponse.SerializeToString,
+                response_deserializer=kanban__pb2.GetLabelsResponse.FromString,
+                )
+        self.GetLabel = channel.unary_unary(
+                '/kanban_package.KanbanPackage/GetLabel',
+                request_serializer=kanban__pb2.GetLabelRequest.SerializeToString,
+                response_deserializer=kanban__pb2.Label.FromString,
+                )
         self.AddItem = channel.unary_unary(
                 '/kanban_package.KanbanPackage/AddItem',
                 request_serializer=kanban__pb2.AddItemRequest.SerializeToString,
@@ -81,6 +91,18 @@ class KanbanPackageServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def AddLabel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetLabels(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetLabel(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -151,6 +173,16 @@ def add_KanbanPackageServicer_to_server(servicer, server):
             'AddLabel': grpc.unary_unary_rpc_method_handler(
                     servicer.AddLabel,
                     request_deserializer=kanban__pb2.LabelRequest.FromString,
+                    response_serializer=kanban__pb2.Label.SerializeToString,
+            ),
+            'GetLabels': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetLabels,
+                    request_deserializer=kanban__pb2.BoardResponse.FromString,
+                    response_serializer=kanban__pb2.GetLabelsResponse.SerializeToString,
+            ),
+            'GetLabel': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetLabel,
+                    request_deserializer=kanban__pb2.GetLabelRequest.FromString,
                     response_serializer=kanban__pb2.Label.SerializeToString,
             ),
             'AddItem': grpc.unary_unary_rpc_method_handler(
@@ -238,6 +270,40 @@ class KanbanPackage(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/AddLabel',
             kanban__pb2.LabelRequest.SerializeToString,
+            kanban__pb2.Label.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetLabels(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/GetLabels',
+            kanban__pb2.BoardResponse.SerializeToString,
+            kanban__pb2.GetLabelsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetLabel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/GetLabel',
+            kanban__pb2.GetLabelRequest.SerializeToString,
             kanban__pb2.Label.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -235,6 +235,18 @@ class DeleteReactionRequest(_message.Message):
     id: str
     def __init__(self, id: _Optional[str] = ...) -> None: ...
 
+class GetLabelsResponse(_message.Message):
+    __slots__ = ["labels"]
+    LABELS_FIELD_NUMBER: _ClassVar[int]
+    labels: _containers.RepeatedCompositeFieldContainer[Label]
+    def __init__(self, labels: _Optional[_Iterable[_Union[Label, _Mapping]]] = ...) -> None: ...
+
+class GetLabelRequest(_message.Message):
+    __slots__ = ["labelId"]
+    LABELID_FIELD_NUMBER: _ClassVar[int]
+    labelId: str
+    def __init__(self, labelId: _Optional[str] = ...) -> None: ...
+
 class VoidResp(_message.Message):
     __slots__ = []
     def __init__(self) -> None: ...

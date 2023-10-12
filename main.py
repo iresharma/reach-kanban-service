@@ -5,7 +5,7 @@ import pb.kanban_pb2 as models
 from concurrent import futures
 import pb.kanban_pb2_grpc as kanban_grpc
 
-from database import createBoard, addLabel, addItem, getItem, updateItem
+from database import createBoard, addLabel, addItem, getItem, updateItem, getLabel, getLabels
 
 
 class Service(KanbanPackageServicer):
@@ -25,6 +25,24 @@ class Service(KanbanPackageServicer):
             name=name,
             color=color,
             boardId=board_id
+        )
+
+    def GetLabel(self, request: models.GetLabelRequest, context):
+        label_id = request.labelId
+        label = getLabel(label_id)
+        return models.Label(
+            id=label.id,
+            name=label.name,
+            color=label.color,
+            boardId=label.boardId
+        )
+
+
+    def GetLabels(self, request: models.BoardResponse, context):
+        board_id = request.id
+        labels = getLabels(board_id)
+        return models.GetLabelsResponse(
+            labels=labels
         )
 
     def AddItem(self, request: models.AddItemRequest, context):

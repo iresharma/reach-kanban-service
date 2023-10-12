@@ -93,6 +93,28 @@ def addLabel(name: str, color: str, board_id: str) -> KanbanLabel:
         print(e)
 
 
+def getLabels(board_id: str):
+    try:
+        with db.atomic():
+            keys = [
+                KanbanLabel.id,
+                KanbanLabel.color,
+                KanbanLabel.name
+            ]
+            labels = KanbanLabel.select(*keys).where(Item.board == board_id).dicts()
+            return list(labels)
+    except Exception as e:
+        print(e)
+
+
+def getLabel(label_id: str):
+    try:
+        with db.atomic():
+            label = KanbanLabel.get_by_id(label_id)
+            return label
+    except Exception as e:
+        print(e)
+
 def addItem(label: str, status: str, title: str, desc: str, links: str, board_id: str, user_id: str) -> Item:
     try:
         with db.atomic():
@@ -111,7 +133,7 @@ def addItem(label: str, status: str, title: str, desc: str, links: str, board_id
                 desc=desc,
                 links=links,
                 board=board_id,
-                userId=user_id
+                # userId=""
             )
             return item
     except Exception as e:
@@ -149,7 +171,6 @@ def getItem(page: int, limit: int, board_id: str) -> list:
             ]
             items = Item.select(*keys).join(KanbanLabel).offset(page * limit).limit(limit).where(
                 Item.board == board_id).dicts()
-            print(list(items))
             return list(map(ItemToRPCItem, items))
     except Exception as e:
         print(e)
