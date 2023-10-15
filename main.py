@@ -5,7 +5,8 @@ import pb.kanban_pb2 as models
 from concurrent import futures
 import pb.kanban_pb2_grpc as kanban_grpc
 
-from database import createBoard, addLabel, addItem, getItem, updateItem, getLabel, getLabels
+from database import createBoard, addLabel, addItem, getItem, updateItem, getLabel, getLabels, addComment, \
+    updateComment, deleteComment
 
 
 class Service(KanbanPackageServicer):
@@ -31,12 +32,11 @@ class Service(KanbanPackageServicer):
         label_id = request.labelId
         label = getLabel(label_id)
         return models.Label(
-            id=label.id,
-            name=label.name,
-            color=label.color,
-            boardId=label.boardId
+            id=str(label.id),
+            name=str(label.name),
+            color=str(label.color),
+            boardId=str(label.boardId)
         )
-
 
     def GetLabels(self, request: models.BoardResponse, context):
         board_id = request.id
@@ -101,13 +101,30 @@ class Service(KanbanPackageServicer):
         return model
 
     def AddComment(self, request: models.CommentRequest, context):
-        pass
+        message = request.message
+        user_id = request.userId
+        item_id = request.ItemId
+        comment = addComment(message, item_id, user_id)
+        return models.Comment(
+            id=comment.id,
+            message=message,
+            userId=user_id,
+        )
 
-    def UpdateComment(self, request, context):
-        pass
+    def UpdateComment(self, request: models.UpdateCommentRequest, context):
+        comment_id = request.id
+        message = request.message
+        updateComment(comment_id, message)
+        return models.Comment(
+            id=comment_id,
+            message=message,
+        )
 
-    def DeleteComment(self, request, context):
-        pass
+    def DeleteComment(self, request: models.DeleteCommentRequest, context):
+        comment_id = request.id
+        deleteComment(comment_id)
+        return models.VoidResp()
+
 
     def AddReaction(self, request, context):
         pass

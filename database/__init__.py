@@ -1,7 +1,7 @@
 from peewee import PostgresqlDatabase, Model, CharField, ForeignKeyField, JOIN
 from os import environ
 from uuid import uuid4
-from pb.kanban_pb2 import Item as RPCItem, Label, STATUS
+from pb.kanban_pb2 import Item as RPCItem, Label, STATUS, Comment as RPCComment
 
 db = PostgresqlDatabase(environ['DB_NAME'], user=environ['DB_USER'], password=environ['DB_PASSWORD'],
                         host=environ['DB_HOST'], port=environ["DB_PORT"])
@@ -58,10 +58,11 @@ class Reaction(BaseModel):
     id = CharField(primary_key=True)
     userId = CharField()
     emoji = CharField()
+    comment = ForeignKeyField(Comment, backref="reactions")
 
 
 with db:
-    db.create_tables([Board, Item, KanbanLabel, Comment])
+    db.create_tables([Board, Item, KanbanLabel, Comment, Reaction])
 
 
 def createBoard(user_Account: str) -> str:
@@ -101,19 +102,20 @@ def getLabels(board_id: str):
                 KanbanLabel.color,
                 KanbanLabel.name
             ]
-            labels = KanbanLabel.select(*keys).where(Item.board == board_id).dicts()
+            labels = KanbanLabel.select(*keys).where(KanbanLabel.boardId == board_id).dicts()
             return list(labels)
     except Exception as e:
         print(e)
 
 
-def getLabel(label_id: str):
+def getLabel(label_id: str) -> Label:
     try:
         with db.atomic():
             label = KanbanLabel.get_by_id(label_id)
             return label
     except Exception as e:
         print(e)
+
 
 def addItem(label: str, status: str, title: str, desc: str, links: str, board_id: str, user_id: str) -> Item:
     try:
@@ -152,7 +154,13 @@ def ItemToRPCItem(item: dict) -> RPCItem:
         title=item["title"],
         desc=item["desc"],
         links=item["links"],
-        userId=""
+        userId="",
+        comments=list(map(lambda x: RPCComment(
+            id=x["id"],
+            message=x["message"],
+            userId=x["userId"],
+            reactions=[]
+        ), item["comments"]))
     )
 
 
@@ -167,10 +175,13 @@ def getItem(page: int, limit: int, board_id: str) -> list:
                 Item.links,
                 Item.label,
                 KanbanLabel.color,
-                KanbanLabel.name
+                KanbanLabel.name,
+                Comment.message,
+                Comment.userId
             ]
-            items = Item.select(*keys).join(KanbanLabel).offset(page * limit).limit(limit).where(
+            items = Item.select(*keys).join(Comment, join_type=JOIN.LEFT_OUTER, on=(Comment.item == Item.id)).join(KanbanLabel, on=(KanbanLabel.id == Item.label)).group_by(Item.id).offset(page * limit).limit(limit).where(
                 Item.board == board_id).dicts()
+            print(items)
             return list(map(ItemToRPCItem, items))
     except Exception as e:
         print(e)
@@ -189,3 +200,36 @@ def updateItem(item_id: str, label: str, input_status: STATUS, title: str, desc:
             row.execute()
     except Exception as e:
         print(type(e))
+
+
+def addComment(message: str, item_id: str, user_id: str) -> Comment:
+    try:
+        with db.atomic():
+            comment = Comment.create(
+                id=str(uuid4()),
+                message=message,
+                item_id=item_id,
+                userId=user_id
+            )
+            return comment
+    except Exception as e:
+        print(e)
+
+
+def updateComment(comment_id: str, message: str):
+    try:
+        with db.atomic():
+            row = Comment.update(
+                message=message,
+            ).where(Comment.id == comment_id)
+            row.execute()
+    except Exception as e:
+        print(e)
+
+
+def deleteComment(comment_id: str):
+    try:
+        with db.atomic():
+            Comment.delete().where(Comment.id == comment_id).execute()
+    except Exception as e:
+        print(e)
