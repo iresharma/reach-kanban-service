@@ -175,13 +175,13 @@ def getItem(page: int, limit: int, board_id: str) -> list:
                 Item.links,
                 Item.label,
                 KanbanLabel.color,
-                KanbanLabel.name,
-                Comment.message,
-                Comment.userId
+                KanbanLabel.name
             ]
-            items = Item.select(*keys).join(Comment, join_type=JOIN.LEFT_OUTER, on=(Comment.item == Item.id)).join(KanbanLabel, on=(KanbanLabel.id == Item.label)).group_by(Item.id).offset(page * limit).limit(limit).where(
+            items = Item.select(*keys).join(KanbanLabel).offset(page * limit).limit(limit).where(
                 Item.board == board_id).dicts()
-            print(items)
+            for item in items:
+                comments = Comment.select().where(Comment.item == item["id"]).dicts()
+                item["comments"] = comments
             return list(map(ItemToRPCItem, items))
     except Exception as e:
         print(e)
