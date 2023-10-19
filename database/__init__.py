@@ -1,4 +1,4 @@
-from peewee import PostgresqlDatabase, Model, CharField, ForeignKeyField, JOIN
+from peewee import PostgresqlDatabase, Model, CharField, ForeignKeyField, JOIN, TextField
 from os import environ
 from uuid import uuid4
 from pb.kanban_pb2 import Item as RPCItem, Label, STATUS, Comment as RPCComment
@@ -40,7 +40,7 @@ class Item(BaseModel):
     id = CharField(primary_key=True)
     status = CharField()
     title = CharField()
-    desc = CharField()
+    desc = TextField()
     links = CharField()
     board = ForeignKeyField(Board, backref="items")
     label = ForeignKeyField(KanbanLabel, backref="item")
@@ -50,7 +50,7 @@ class Item(BaseModel):
 class Comment(BaseModel):
     id = CharField(primary_key=True)
     userId = CharField()
-    message = CharField()
+    message = TextField()
     item = ForeignKeyField(Item, backref="comments")
 
 

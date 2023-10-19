@@ -74,7 +74,6 @@ class Service(KanbanPackageServicer):
         limit = request.limit
         board = request.board
         items = getItem(page, limit, board)
-        print(items)
         return models.GetItemResponse(
             items=items,
             page=(page + 1)
