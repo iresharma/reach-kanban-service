@@ -187,6 +187,26 @@ def getItem(page: int, limit: int, board_id: str) -> list:
         print(e)
 
 
+def getitem(id: str):
+    try:
+        with db.atomic():
+            keys = [
+                Item.id,
+                Item.status,
+                Item.title,
+                Item.desc,
+                Item.links,
+                Item.label,
+                KanbanLabel.color,
+                KanbanLabel.name
+            ]
+            item = Item.select(*keys).join(KanbanLabel).where(Item.id == id).dicts()
+            comments = Comment.select().where(Comment.item == id).dicts()
+            item[0]["comments"] = comments
+            return ItemToRPCItem(item[0])
+    except Exception as e:
+        print(e)
+
 def updateItem(item_id: str, label: str, input_status: STATUS, title: str, desc: str, links: str):
     try:
         with db.atomic():
