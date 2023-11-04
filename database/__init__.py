@@ -190,6 +190,7 @@ def getItem(page: int, limit: int, board_id: str) -> list:
 def getitem(id: str):
     try:
         with db.atomic():
+            print("yo")
             keys = [
                 Item.id,
                 Item.status,
