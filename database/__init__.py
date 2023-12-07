@@ -135,7 +135,7 @@ def addItem(label: str, status: str, title: str, desc: str, links: str, board_id
                 desc=desc,
                 links=links,
                 board=board_id,
-                # userId=""
+                userId=user_id
             )
             return item
     except Exception as e:
