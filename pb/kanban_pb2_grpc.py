@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import kanban_pb2 as kanban__pb2
+import pb.kanban_pb2 as kanban__pb2
 
 
 class KanbanPackageStub(object):
