@@ -31,7 +31,7 @@ class Board(BaseModel):
 
 class KanbanLabel(BaseModel):
     id = CharField(primary_key=True)
-    name = CharField(unique=True)
+    name = CharField()
     color = CharField()
     boardId = ForeignKeyField(Board, backref="labels")
 
