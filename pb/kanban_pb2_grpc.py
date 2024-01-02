@@ -54,6 +54,11 @@ class KanbanPackageStub(object):
                 request_serializer=kanban__pb2.UpdateItemRequest.SerializeToString,
                 response_deserializer=kanban__pb2.Item.FromString,
                 )
+        self.DeleteItem = channel.unary_unary(
+                '/kanban_package.KanbanPackage/DeleteItem',
+                request_serializer=kanban__pb2.DeleteReactionRequest.SerializeToString,
+                response_deserializer=kanban__pb2.VoidResp.FromString,
+                )
         self.AddComment = channel.unary_unary(
                 '/kanban_package.KanbanPackage/AddComment',
                 request_serializer=kanban__pb2.CommentRequest.SerializeToString,
@@ -137,6 +142,12 @@ class KanbanPackageServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def DeleteItem(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def AddComment(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -215,6 +226,11 @@ def add_KanbanPackageServicer_to_server(servicer, server):
                     servicer.UpdateItem,
                     request_deserializer=kanban__pb2.UpdateItemRequest.FromString,
                     response_serializer=kanban__pb2.Item.SerializeToString,
+            ),
+            'DeleteItem': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteItem,
+                    request_deserializer=kanban__pb2.DeleteReactionRequest.FromString,
+                    response_serializer=kanban__pb2.VoidResp.SerializeToString,
             ),
             'AddComment': grpc.unary_unary_rpc_method_handler(
                     servicer.AddComment,
@@ -389,6 +405,23 @@ class KanbanPackage(object):
         return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/UpdateItem',
             kanban__pb2.UpdateItemRequest.SerializeToString,
             kanban__pb2.Item.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DeleteItem(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/kanban_package.KanbanPackage/DeleteItem',
+            kanban__pb2.DeleteReactionRequest.SerializeToString,
+            kanban__pb2.VoidResp.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

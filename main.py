@@ -6,7 +6,7 @@ from concurrent import futures
 import pb.kanban_pb2_grpc as kanban_grpc
 
 from database import createBoard, addLabel, addItem, getItem, updateItem, getLabel, getLabels, addComment, \
-    updateComment, deleteComment, getitem
+    updateComment, deleteComment, getitem, deleteItem
 
 
 class Service(KanbanPackageServicer):
@@ -102,6 +102,11 @@ class Service(KanbanPackageServicer):
             links=request.links,
         )
         return model
+
+    def DeleteItem(self, request: models.DeleteReactionRequest, context):
+        id = request.id
+        deleteItem(id)
+        return models.VoidResp()
 
     def AddComment(self, request: models.CommentRequest, context):
         message = request.message

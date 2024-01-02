@@ -190,7 +190,6 @@ def getItem(page: int, limit: int, board_id: str) -> list:
 def getitem(id: str):
     try:
         with db.atomic():
-            print("yo")
             keys = [
                 Item.id,
                 Item.status,
@@ -208,6 +207,7 @@ def getitem(id: str):
     except Exception as e:
         print(e)
 
+
 def updateItem(item_id: str, label: str, input_status: STATUS, title: str, desc: str, links: str):
     try:
         with db.atomic():
@@ -221,6 +221,15 @@ def updateItem(item_id: str, label: str, input_status: STATUS, title: str, desc:
             row.execute()
     except Exception as e:
         print(type(e))
+
+
+def deleteItem(item_id: str):
+    try:
+        with db.atomic():
+            print(item_id)
+            db.execute_sql("DELETE FROM Item WHERE Item.id = {}".format(item_id))
+    except Exception as e:
+        print(e)
 
 
 def addComment(message: str, item_id: str, user_id: str) -> Comment:
