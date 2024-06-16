@@ -34,4 +34,4 @@ ENV DB_NAME=$DB_NAME
 EXPOSE 4040
 
 # Command to run the application
-CMD ["python", "cmd/main.py"]
+CMD ["python", "main.py"]
