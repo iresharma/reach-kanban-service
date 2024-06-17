@@ -6,7 +6,8 @@ import base64
 
 import requests
 
-parseable_url = "https://parseable-production-2e38.up.railway.app/api/v1/logstream/kanbanserver"
+url = os.environ.get('PARSEABLE_URL')
+parseable_url = f"https://{url}/api/v1/logstream/kanbanserver"
 
 
 class InfoEvent:
