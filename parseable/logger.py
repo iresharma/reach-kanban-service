@@ -3,6 +3,7 @@ import json
 import os
 import uuid
 import base64
+from enum import Enum
 
 import requests
 
@@ -10,31 +11,44 @@ url = os.environ.get('PARSEABLE_URL')
 parseable_url = f"https://{url}/api/v1/logstream/kanbanserver"
 
 
+class LogLevel(Enum):
+    INFO = "info"
+    ERROR = "error"
+
+
 class InfoEvent:
-    def __init__(self, type: str, message: str):
+    def __init__(self, type: LogLevel, message: str, board: str | None, context: dict):
         self.type = type
         self.message = message
+        self.board = board
+        self.context = context
 
     def to_json(self):
         return json.dumps({
             "id": str(uuid.uuid4()),
             "type": self.type,
-            "message": self.message
+            "message": self.message,
+            "X-Board": self.board,
+            "context": self.context
         })
 
 
 class ErrorEvent:
-    def __init__(self, type: str, error: Exception, message: str | None = None):
+    def __init__(self, type: LogLevel, error: Exception, board: str | None, context: dict, message: str | None = None):
         self.type = type
         self.message = message
         self.error = error
+        self.board = board
+        self.context = context
 
     def to_json(self):
         return json.dumps({
             "id": str(uuid.uuid4()),
             "type": self.type,
             "message": self.message if self.message else str(self.error),
-            "error": str(type(self.error))
+            "error": str(type(self.error)),
+            "X-Board": self.board,
+            "context": self.context
         })
 
 
@@ -51,3 +65,15 @@ def send_log_event(event: InfoEvent | ErrorEvent):
     payload = event.to_json()
 
     requests.post(url=parseable_url, headers=headers, data=payload)
+
+
+def infoLog(message: str, board: str | None, context: dict | None):
+    log_event = InfoEvent(type=LogLevel.INFO, message=message, board=board, context=context)
+    print(log_event)
+    send_log_event(log_event)
+
+
+def ErrorLog(error: Exception, board: str | None, context: dict | None, message: str | None):
+    log_event = ErrorEvent(type=LogLevel.ERROR, message=message, board=board, context=context, error=error)
+    print(log_event)
+    send_log_event(log_event)

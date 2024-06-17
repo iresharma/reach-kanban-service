@@ -1,6 +1,8 @@
 from peewee import PostgresqlDatabase, Model, CharField, ForeignKeyField, JOIN, TextField
 from os import environ
 from uuid import uuid4
+
+from parseable.logger import ErrorLog
 from pb.kanban_pb2 import Item as RPCItem, Label, STATUS, Comment as RPCComment
 
 db = PostgresqlDatabase(environ['DB_NAME'], user=environ['DB_USER'], password=environ['DB_PASSWORD'],
@@ -76,11 +78,10 @@ def createBoard(user_Account: str) -> str:
                     board.id, user_Account))
         return board.id
     except Exception as e:
-        print(e)
+        ErrorLog(error=e, context={"X-UserAccount": user_Account})
 
 
 def addLabel(name: str, color: str, board_id: str) -> KanbanLabel:
-    print(name, color, board_id)
     try:
         with db.atomic():
             label = KanbanLabel.create(
@@ -91,7 +92,7 @@ def addLabel(name: str, color: str, board_id: str) -> KanbanLabel:
             )
         return label
     except Exception as e:
-        print(e)
+        ErrorLog(error=e, board=board_id, message="Could not add label")
 
 
 def getLabels(board_id: str):
@@ -105,7 +106,7 @@ def getLabels(board_id: str):
             labels = KanbanLabel.select(*keys).where(KanbanLabel.boardId == board_id).dicts()
             return list(labels)
     except Exception as e:
-        print(e)
+        ErrorLog(error=e, board=board_id, message="Could not get any labels")
 
 
 def getLabel(label_id: str) -> Label:
@@ -114,8 +115,7 @@ def getLabel(label_id: str) -> Label:
             label = KanbanLabel.get_by_id(label_id)
             return label
     except Exception as e:
-        print(e)
-
+        ErrorLog(error=e, message="Could not find label")
 
 def addItem(label: str, status: str, title: str, desc: str, links: str, board_id: str, user_id: str) -> Item:
     try:
@@ -139,7 +139,7 @@ def addItem(label: str, status: str, title: str, desc: str, links: str, board_id
             )
             return item
     except Exception as e:
-        print(e)
+        ErrorLog(error=e, message="failed while adding item", board=board_id)
 
 
 def ItemToRPCItem(item: dict) -> RPCItem:
@@ -184,6 +184,7 @@ def getItem(page: int, limit: int, board_id: str) -> list:
                 item["comments"] = comments
             return list(map(ItemToRPCItem, items))
     except Exception as e:
+        ErrorLog(error=e, message="failed while getting items", board=board_id)
         print(e)
 
 
@@ -205,6 +206,7 @@ def getitem(id: str):
             item[0]["comments"] = comments
             return ItemToRPCItem(item[0])
     except Exception as e:
+        ErrorLog(error=e, message=f"failed while getting item {id}")
         print(e)
 
 
@@ -220,6 +222,7 @@ def updateItem(item_id: str, label: str, input_status: STATUS, title: str, desc:
             ).where(Item.id == item_id)
             row.execute()
     except Exception as e:
+        ErrorLog(error=e, message=f"failed while updating item {item_id}")
         print(type(e))
 
 
@@ -229,6 +232,7 @@ def deleteItem(item_id: str):
             print(item_id)
             db.execute_sql("DELETE FROM Item WHERE Item.id = {}".format(item_id))
     except Exception as e:
+        ErrorLog(error=e, message=f"failed while deleting item {item_id}")
         print(e)
 
 
@@ -243,6 +247,7 @@ def addComment(message: str, item_id: str, user_id: str) -> Comment:
             )
             return comment
     except Exception as e:
+        ErrorLog(error=e, message=f"failed while adding comment item {item_id}")
         print(e)
 
 
@@ -254,6 +259,7 @@ def updateComment(comment_id: str, message: str):
             ).where(Comment.id == comment_id)
             row.execute()
     except Exception as e:
+        ErrorLog(error=e, message=f"failed while updating comment {comment_id}")
         print(e)
 
 
@@ -262,4 +268,5 @@ def deleteComment(comment_id: str):
         with db.atomic():
             Comment.delete().where(Comment.id == comment_id).execute()
     except Exception as e:
+        ErrorLog(error=e, message=f"failed while deleting comment {comment_id}")
         print(e)
