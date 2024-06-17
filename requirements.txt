@@ -1,5 +1,10 @@
+certifi==2024.6.2
+charset-normalizer==3.3.2
 grpcio==1.56.2
 grpcio-tools==1.56.2
+idna==3.7
 peewee==3.16.3
 protobuf==4.23.4
-psycopg2-binary
+psycopg2==2.9.7
+requests==2.32.3
+urllib3==2.2.2
