@@ -8,7 +8,7 @@ from enum import Enum
 import requests
 
 url = os.environ.get('PARSEABLE_URL')
-parseable_url = f"https://{url}/api/v1/logstream/kanbanserver"
+parseable_url = f"{url}/api/v1/logstream/kanbanserver"
 
 
 class LogLevel(Enum):
