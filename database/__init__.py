@@ -6,7 +6,7 @@ from parseable.logger import ErrorLog
 from pb.kanban_pb2 import Item as RPCItem, Label, STATUS, Comment as RPCComment
 from playhouse.db_url import connect
 
-db = connect(environ.get('POSTGRES', "postgresql://iresharma@localhost/reach-systems"))
+db = connect(environ.get('POSTGRES'))
 
 status = {
     "0": "TODO",

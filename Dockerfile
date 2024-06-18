@@ -18,9 +18,13 @@ COPY . .
 
 # Inject variables from railway
 ARG POSTGRES
+ARG PARSEABLE_CREDS
+ARG PARSEABLE_URL
 
 # Set environment variables
 ENV POSTGRES=$POSTGRES
+ENV PARSEABLE_CREDS=$PARSEABLE_CREDS
+ENV PARSEABLE_URL=$PARSEABLE_URL
 
 # Expose the port the gRPC service runs on
 EXPOSE 4040
