@@ -21,12 +21,12 @@ class Service(KanbanPackageServicer):
         return models.BoardResponse(id=id)
 
     def AddLabel(self, request: models.LabelRequest, context):
-        infoLog(message="Adding new label for board", context=MessageToDict(request), board=request.boardId)
+        infoLog(message="Adding new label for board", context=MessageToDict(request))
         name = request.name
         color = request.color
         board_id = request.boardId
         label = addLabel(name, color, board_id)
-        infoLog(message=f"Added new label {label.id} to board {request.boardId}", context=MessageToDict(request), board=request.boardId)
+        infoLog(message=f"Added new label {label.id} to board {request.boardId}", context=MessageToDict(request))
         return models.Label(
             id=label.id,
             name=name,
@@ -45,7 +45,6 @@ class Service(KanbanPackageServicer):
             boardId=str(label.boardId)
         )
 
-
     def GetLabels(self, request: models.BoardResponse, context):
         infoLog(message="Getting all labels for board", context=MessageToDict(request))
         board_id = request.id
@@ -55,7 +54,7 @@ class Service(KanbanPackageServicer):
         )
 
     def AddItem(self, request: models.AddItemRequest, context):
-        infoLog(message=f"Add new item to board {request.boardId}", context=MessageToDict(request), board=request.boardId)
+        infoLog(message=f"Add new item to board {request.boardId}", context=MessageToDict(request))
         label = request.label
         status = request.status
         title = request.title
@@ -64,7 +63,7 @@ class Service(KanbanPackageServicer):
         boardId = request.boardId
         userId = request.userId
         item = addItem(label, str(status), title, desc, str(links), boardId, userId)
-        infoLog(message=f"Added new item {item.id} to board {request.boardId}", context=MessageToDict(request), board=request.boardId)
+        infoLog(message=f"Added new item {item.id} to board {request.boardId}", context=MessageToDict(request))
         try:
             model = models.Item(
                 id=item.id,
@@ -78,10 +77,10 @@ class Service(KanbanPackageServicer):
             )
             return model
         except Exception as e:
-            ErrorLog(error=e, message="Failed parsing add item", board=request.boardId)
+            ErrorLog(error=e, message="Failed parsing add item")
 
     def GetItems(self, request: models.GetItemRequest, context):
-        infoLog(message=f"Get Items for board {request.board}", context=MessageToDict(request), board=request.board)
+        infoLog(message=f"Get Items for board {request.board}", context=MessageToDict(request))
         page = request.page
         limit = request.limit
         board = request.board
@@ -166,13 +165,6 @@ if __name__ == "__main__":
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     kanban_grpc.add_KanbanPackageServicer_to_server(Service(), server)
     server.add_insecure_port("[::]:" + port)
-    while True:
-        try:
-            server.start()
-            print("Server started, listening on " + port)
-            server.wait_for_termination()
-        except KeyboardInterrupt:
-            print("Server stopped by user")
-            break
-        except Exception as e:
-            print(e.__dict__)
+    server.start()
+    print("Server started, listening on " + port)
+    server.wait_for_termination()

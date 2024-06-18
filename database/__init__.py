@@ -114,7 +114,8 @@ def addLabel(name: str, color: str, board_id: str) -> KanbanLabel:
             )
         return label
     except Exception as e:
-        ErrorLog(error=e, board=board_id, message="Could not add label")
+        print(e)
+        ErrorLog(error=e, message="Could not add label")
 
 
 def getLabels(board_id: str):
@@ -128,7 +129,7 @@ def getLabels(board_id: str):
             labels = KanbanLabel.select(*keys).where(KanbanLabel.boardId == board_id).dicts()
             return list(labels)
     except Exception as e:
-        ErrorLog(error=e, board=board_id, message="Could not get any labels")
+        ErrorLog(error=e, message="Could not get any labels")
 
 
 def getLabel(label_id: str) -> Label:
@@ -161,7 +162,7 @@ def addItem(label: str, status: str, title: str, desc: str, links: str, board_id
             )
             return item
     except Exception as e:
-        ErrorLog(error=e, message="failed while adding item", board=board_id)
+        ErrorLog(error=e, message="failed while adding item")
 
 
 def ItemToRPCItem(item: dict) -> RPCItem:
@@ -206,7 +207,7 @@ def getItem(page: int, limit: int, board_id: str) -> list:
                 item["comments"] = comments
             return list(map(ItemToRPCItem, items))
     except Exception as e:
-        ErrorLog(error=e, message="failed while getting items", board=board_id)
+        ErrorLog(error=e, message="failed while getting items")
         print(e)
 
 

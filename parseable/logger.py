@@ -17,10 +17,9 @@ class LogLevel(Enum):
 
 
 class InfoEvent:
-    def __init__(self, type: LogLevel, message: str, board: str | None, context: dict):
+    def __init__(self, type: LogLevel, message: str, context: dict):
         self.type = type
         self.message = message
-        self.board = board
         self.context = context
 
     def to_json(self):
@@ -28,17 +27,15 @@ class InfoEvent:
             "id": str(uuid.uuid4()),
             "type": str(self.type),
             "message": self.message,
-            "X-Board": self.board,
             "context": json.dumps(self.context)
         })
 
 
 class ErrorEvent:
-    def __init__(self, type: LogLevel, error: Exception, board: str | None, context: dict, message: str | None = None):
+    def __init__(self, type: LogLevel, error: Exception, context: dict, message: str | None = None):
         self.type = type
         self.message = message
         self.error = error
-        self.board = board
         self.context = context
 
     def to_json(self):
@@ -47,7 +44,6 @@ class ErrorEvent:
             "type": str(self.type),
             "message": self.message if self.message else str(self.error),
             "error": str(type(self.error)),
-            "X-Board": self.board,
             "context": json.dumps(self.context)
         })
 
@@ -63,14 +59,15 @@ def send_log_event(event: InfoEvent | ErrorEvent):
     }
     payload = event.to_json()
     res = requests.post(url=parseable_url, headers=headers, data=payload)
-    print(res.status_code)
 
 
-def infoLog(message: str, board: str | None=None, context: dict | None=None):
-    log_event = InfoEvent(type=LogLevel.INFO, message=message, board=board, context=context)
+def infoLog(message: str, context: dict | None=None):
+    log_event = InfoEvent(type=LogLevel.INFO, message=message, context=context)
+    print(log_event.__dict__)
     send_log_event(log_event)
 
 
-def ErrorLog(error: Exception, board: str | None=None, context: dict | None=None, message: str | None=None):
-    log_event = ErrorEvent(type=LogLevel.ERROR, message=message, board=board, context=context, error=error)
+def ErrorLog(error: Exception, context: dict | None=None, message: str | None=None):
+    log_event = ErrorEvent(type=LogLevel.ERROR, message=message, context=context, error=error)
+    print(log_event.__dict__)
     send_log_event(log_event)
