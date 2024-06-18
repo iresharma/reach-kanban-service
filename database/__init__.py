@@ -4,9 +4,9 @@ from uuid import uuid4
 
 from parseable.logger import ErrorLog
 from pb.kanban_pb2 import Item as RPCItem, Label, STATUS, Comment as RPCComment
+from playhouse.db_url import connect
 
-db = PostgresqlDatabase(environ['DB_NAME'], user=environ['DB_USER'], password=environ['DB_PASSWORD'],
-                        host=environ['DB_HOST'], port=environ["DB_PORT"])
+db = connect(environ.get('POSTGRES', "postgresql://iresharma@localhost/reach-systems"))
 
 status = {
     "0": "TODO",
