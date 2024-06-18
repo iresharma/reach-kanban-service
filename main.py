@@ -166,6 +166,13 @@ if __name__ == "__main__":
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     kanban_grpc.add_KanbanPackageServicer_to_server(Service(), server)
     server.add_insecure_port("[::]:" + port)
-    server.start()
-    print("Server started, listening on " + port)
-    server.wait_for_termination()
+    while True:
+        try:
+            server.start()
+            print("Server started, listening on " + port)
+            server.wait_for_termination()
+        except KeyboardInterrupt:
+            print("Server stopped by user")
+            break
+        except Exception as e:
+            print(e.__dict__)
