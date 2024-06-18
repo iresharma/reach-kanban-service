@@ -17,18 +17,10 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Inject variables from railway
-ARG DB_USER
-ARG DB_PASSWORD
-ARG DB_HOST
-ARG DB_PORT
-ARG DB_NAME
+ARG POSTGRES
 
 # Set environment variables
-ENV DB_USER=$DB_USER
-ENV DB_PASSWORD=$DB_PASSWORD
-ENV DB_HOST=$DB_HOST
-ENV DB_PORT=$DB_PORT
-ENV DB_NAME=$DB_NAME
+ENV POSTGRES=$POSTGRES
 
 # Expose the port the gRPC service runs on
 EXPOSE 4040
