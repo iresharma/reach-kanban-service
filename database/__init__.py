@@ -4,9 +4,31 @@ from uuid import uuid4
 
 from parseable.logger import ErrorLog
 from pb.kanban_pb2 import Item as RPCItem, Label, STATUS, Comment as RPCComment
-from playhouse.db_url import connect
+from urllib.parse import urlparse, parse_qs
 
-db = connect(environ.get('POSTGRES'))
+
+def extract_postgres_details(database_url):
+    result = urlparse(database_url)
+
+    # Extract the components
+    user = result.username
+    password = result.password
+    host = result.hostname
+    port = result.port
+    dbname = result.path.lstrip('/')
+
+    return {
+        "host": host,
+        "user": user,
+        "dbname": dbname,
+        "password": password,
+        "port": port
+    }
+
+
+db_config = extract_postgres_details(environ.get('POSTGRES'))
+db = PostgresqlDatabase(db_config["dbname"], user=db_config["user"], password=db_config["password"],
+                        host=db_config["host"], port=db_config["port"])
 
 status = {
     "0": "TODO",
