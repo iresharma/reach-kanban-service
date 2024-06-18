@@ -1,4 +1,5 @@
 import grpc
+from google.protobuf.json_format import MessageToDict
 
 from pb.kanban_pb2_grpc import KanbanPackageServicer
 import pb.kanban_pb2 as models
@@ -20,12 +21,12 @@ class Service(KanbanPackageServicer):
         return models.BoardResponse(id=id)
 
     def AddLabel(self, request: models.LabelRequest, context):
-        infoLog(message="Adding new label for board", context=request.__dict__, board=request.boardId)
+        infoLog(message="Adding new label for board", context=MessageToDict(request), board=request.boardId)
         name = request.name
         color = request.color
         board_id = request.boardId
         label = addLabel(name, color, board_id)
-        infoLog(message=f"Added new label {label.id} to board {request.boardId}", context=request.__dict__, board=request.boardId)
+        infoLog(message=f"Added new label {label.id} to board {request.boardId}", context=MessageToDict(request), board=request.boardId)
         return models.Label(
             id=label.id,
             name=name,
@@ -34,7 +35,7 @@ class Service(KanbanPackageServicer):
         )
 
     def GetLabel(self, request: models.GetLabelRequest, context):
-        infoLog(message=f"Getting {request.labelId} label for board", context=request.__dict__)
+        infoLog(message=f"Getting {request.labelId} label for board", context=MessageToDict(request))
         label_id = request.labelId
         label = getLabel(label_id)
         return models.Label(
@@ -46,7 +47,7 @@ class Service(KanbanPackageServicer):
 
 
     def GetLabels(self, request: models.BoardResponse, context):
-        infoLog(message="Getting all labels for board", context=request.__dict__)
+        infoLog(message="Getting all labels for board", context=MessageToDict(request))
         board_id = request.id
         labels = getLabels(board_id)
         return models.GetLabelsResponse(
@@ -54,7 +55,7 @@ class Service(KanbanPackageServicer):
         )
 
     def AddItem(self, request: models.AddItemRequest, context):
-        infoLog(message=f"Add new item to board {request.boardId}", context=request.__dict__, board=request.boardId)
+        infoLog(message=f"Add new item to board {request.boardId}", context=MessageToDict(request), board=request.boardId)
         label = request.label
         status = request.status
         title = request.title
@@ -63,7 +64,7 @@ class Service(KanbanPackageServicer):
         boardId = request.boardId
         userId = request.userId
         item = addItem(label, str(status), title, desc, str(links), boardId, userId)
-        infoLog(message=f"Added new item {item.id} to board {request.boardId}", context=request.__dict__, board=request.boardId)
+        infoLog(message=f"Added new item {item.id} to board {request.boardId}", context=MessageToDict(request), board=request.boardId)
         try:
             model = models.Item(
                 id=item.id,
@@ -80,7 +81,7 @@ class Service(KanbanPackageServicer):
             ErrorLog(error=e, message="Failed parsing add item", board=request.boardId)
 
     def GetItems(self, request: models.GetItemRequest, context):
-        infoLog(message=f"Get Items for board {request.board}", context=request.__dict__, board=request.board)
+        infoLog(message=f"Get Items for board {request.board}", context=MessageToDict(request), board=request.board)
         page = request.page
         limit = request.limit
         board = request.board
@@ -91,12 +92,12 @@ class Service(KanbanPackageServicer):
         )
 
     def GetItem(self, request: models.DeleteCommentRequest, context):
-        infoLog(message=f"Getting Item {request.id}", context=request.__dict__)
+        infoLog(message=f"Getting Item {request.id}", context=MessageToDict(request))
         id = request.id
         return getitem(id)
 
     def UpdateItem(self, request: models.UpdateItemRequest, context):
-        infoLog(message=f"Update Item {request.id}", context=request.__dict__)
+        infoLog(message=f"Update Item {request.id}", context=MessageToDict(request))
         updateItem(
             request.id,
             request.label,
@@ -116,13 +117,13 @@ class Service(KanbanPackageServicer):
         return model
 
     def DeleteItem(self, request: models.DeleteReactionRequest, context):
-        infoLog(message=f"Deleting Item {request.id}", context=request.__dict__)
+        infoLog(message=f"Deleting Item {request.id}", context=MessageToDict(request))
         id = request.id
         deleteItem(id)
         return models.VoidResp()
 
     def AddComment(self, request: models.CommentRequest, context):
-        infoLog(message=f"Adding comment to Item {request.ItemId}", context=request.__dict__)
+        infoLog(message=f"Adding comment to Item {request.ItemId}", context=MessageToDict(request))
         message = request.message
         user_id = request.userId
         item_id = request.ItemId
@@ -134,7 +135,7 @@ class Service(KanbanPackageServicer):
         )
 
     def UpdateComment(self, request: models.UpdateCommentRequest, context):
-        infoLog(message=f"Updating comment {request.id}", context=request.__dict__)
+        infoLog(message=f"Updating comment {request.id}", context=MessageToDict(request))
         comment_id = request.id
         message = request.message
         updateComment(comment_id, message)
@@ -144,7 +145,7 @@ class Service(KanbanPackageServicer):
         )
 
     def DeleteComment(self, request: models.DeleteCommentRequest, context):
-        infoLog(message=f"Deleting comment {request.id}", context=request.__dict__)
+        infoLog(message=f"Deleting comment {request.id}", context=MessageToDict(request))
         comment_id = request.id
         deleteComment(comment_id)
         return models.VoidResp()
