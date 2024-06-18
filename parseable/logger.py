@@ -61,24 +61,16 @@ def send_log_event(event: InfoEvent | ErrorEvent):
         "Content-Type": "application/json",
         "X-P-TAG-Language": "python",
     }
-
-    print(headers)
-
     payload = event.to_json()
-
-    print(payload)
-
     res = requests.post(url=parseable_url, headers=headers, data=payload)
     print(res.status_code)
 
 
 def infoLog(message: str, board: str | None=None, context: dict | None=None):
     log_event = InfoEvent(type=LogLevel.INFO, message=message, board=board, context=context)
-    print(log_event.__dict__)
     send_log_event(log_event)
 
 
 def ErrorLog(error: Exception, board: str | None=None, context: dict | None=None, message: str | None=None):
     log_event = ErrorEvent(type=LogLevel.ERROR, message=message, board=board, context=context, error=error)
-    print(log_event)
     send_log_event(log_event)
