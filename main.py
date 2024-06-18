@@ -14,7 +14,7 @@ from database import createBoard, addLabel, addItem, getItem, updateItem, getLab
 
 class Service(KanbanPackageServicer):
 
-    def InitializeKanbanx(self, request: models.CreateKanbanRequest, context):
+    def InitializeKanban(self, request: models.CreateKanbanRequest, context):
         infoLog(message="Creating new board for user account", context={"X-UserAccount": request.UserAccountId})
         user_Account = request.UserAccountId
         id = createBoard(user_Account)

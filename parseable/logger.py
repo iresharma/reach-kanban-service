@@ -29,7 +29,7 @@ class InfoEvent:
             "type": str(self.type),
             "message": self.message,
             "X-Board": self.board,
-            "context": self.context
+            **self.context
         })
 
 
@@ -48,7 +48,7 @@ class ErrorEvent:
             "message": self.message if self.message else str(self.error),
             "error": str(type(self.error)),
             "X-Board": self.board,
-            "context": self.context
+            **self.context
         })
 
 
